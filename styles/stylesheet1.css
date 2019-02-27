@@ -11,8 +11,8 @@
 }
 
 #home-page {
-	opacity: 1;
-	animation: fade-in 1s ease-in;
+	animation: fade-in 1s ease-in both;
+	-webkit-animation: fade-in 1s ease-in both;
 }
 
 @keyframes fade-in {
@@ -33,7 +33,8 @@
 	background-color: rgb(70,70,70);
 	color: white;
 	padding: 1em 0em;
-	animation: widen 1s ease-out;
+	animation: widen 1s ease-out backwards;
+	-webkit-animation: widen 1s ease-out backwards;
 }
 
 @keyframes widen {
