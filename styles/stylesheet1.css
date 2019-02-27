@@ -4,7 +4,82 @@
 	box-sizing: border-box;
 }
 
-p {
-	color: blue;
-	background-color: lightgreen;
+
+.container {
+	background-color: white;
+	color: black;
+}
+
+#home-page {
+	opacity: 1;
+	animation: fade-in 1s ease-in;
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+
+
+.header {
+	background-color: rgb(70,70,70);
+	color: white;
+	padding: 1em 0em;
+	animation: widen 1s ease-out;
+}
+
+@keyframes widen {
+	from {
+		white-space: nowrap;
+		position: relative;
+		overflow: hidden;
+		width: 25%;
+		left: 37.5%;
+		right: 37.5%;
+	}
+	to {
+		white-space: nowrap;
+		position: relative;
+		overflow: hidden;
+		width: 100%;
+		left: 0%;
+		right: 0%;
+	}
+}
+
+#head-text {
+	text-align: center;
+	margin: auto;
+}
+
+.navbar {
+	padding: 1em 1em;
+	display: flex;
+	flex-direction: row;
+}
+
+.whitespace {
+	flex-grow: 1;
+}
+
+.navbtn {
+	margin: 0 0.5em;
+	padding: 0.5em 1em;
+	text-decoration: none;
+	color: white;
+	position: relative;
+}
+
+.navbtn:hover::after {
+	content: "";
+	position: absolute;
+	left: -5%;
+	right: -5%;
+	bottom: -5px;
+	border: 1px orange solid;
 }
