@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>Ch1pless' Pad</title>
+		<title>Ooniversity</title>
 		<link rel="shortcut icon" href="./images/chipicon.png">
 		<link rel="apple-touch-icon" href="./images/chipicon.png">
 		<!-- <link rel="stylesheet" href="./styles/stylesheet1.css"> --->
@@ -14,8 +14,15 @@
 	<body>
 		<div class="container" id="home-page">
 			<header class="header" id="home-header">
-				<div id="head-text">
-					<h1>Ch1pless' Pad</h1>
+				<div class="" id="amounts">
+					<div id="energyRow">
+						<p id="energyAmount"></p>
+					</div>
+					<div id="unitRow">
+						<p class="units" id="matterAmount"></p>
+						<p class="units" id="spaceAmount"></p>
+						<p class="units" id="timeAmount"></p>
+					</div>
 				</div>
 				<nav class="navbar" id="home-navbar">
 					<a href="./bump.html" class="navbtn">Bump
@@ -28,17 +35,21 @@
 			</header>
 
 			<div class="container" id="main-container">
-				<div class="section" id="about-me">
-
+				<div class="row" id="spaceRow1">
+					<h2>First Matter Generator</h2>
+					<h2 id="firstMatterAmount"></h2>
+					<button type="button" name="button" id="firstMatterBuy1"></button>
 				</div>
+
 			</div>
 
 			<footer class="footer" id="home-footer">
 			</footer>
 		</div>
 
-
+		<script src="./scripts/decimal.min.js"></script>
 		<script src="./scripts/opening.js" charset="utf-8"></script>
+		<script src="./scripts/game.js" charset="utf-8"></script>
 	</body>
 
 </html>
