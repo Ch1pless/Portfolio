@@ -49,27 +49,27 @@ ooniverses give a multiplier or ooniverse saves past production amounts and will
 
 let firstMatterBuy1 = document.getElementById("firstMatterBuy1"),
 firstMatterAmount = document.getElementById("firstMatterAmount"),
-hoomanEnergy = document.getElementById("energyAmount"),
-hoomanMatter = document.getElementById("matterAmount"),
-hoomanSpace = document.getElementById("spaceAmount"),
-hoomanTime = document.getElementById("timeAmount");
+ooniverseEnergy = document.getElementById("energyAmount"),
+ooniverseMatter = document.getElementById("matterAmount"),
+ooniverseSpace = document.getElementById("spaceAmount"),
+ooniverseTime = document.getElementById("timeAmount");
 function firstMatterBuy1Clicked() {
-	hooman.energy = hooman.energy.sub(space.first.cost);
-	space.first.cost = space.first.cost.mul(space.costMults[0]);
+	hooman.energy = hooman.energy.sub(matter.first.cost);
+	space.first.cost = space.first.cost.mul(matter.costMults[0]);
 	space.first.amount+=1;
 	space.first.bought+=1;
-	firstSpaceBuy1.innerHTML = `Cost: ${space.first.cost}`;
-	firstSpaceAmount.innerHTML = `${space.first.amount}`;
-	hoomanEnergy.innerHTML = `${hooman.energy}`;
+	firstMatterBuy1.innerHTML = `Cost: ${matter.first.cost}`;
+	firstMatterAmount.innerHTML = `${matter.first.amount}`;
+	ooniverseEnergy.innerHTML = `${ooniverse.energyAmount}`;
 }
 
-firstSpaceBuy1.addEventListener("click", firstMatterBuy1Clicked);
+firstMatterBuy1.addEventListener("click", firstMatterBuy1Clicked);
 
 function displayInit() {
-	hoomanEnergy.innerHTML = `${hooman.energy}`;
+	ooniverseEnergy.innerHTML = `${ooniverse.energyAmount}`;
 
-	firstSpaceBuy1.innerHTML = `Cost: ${space.first.cost}`;
-	firstSpaceAmount.innerHTML = `${space.first.amount}`;
+	firstMatterBuy1.innerHTML = `Cost: ${matter.first.cost}`;
+	firstMatterAmount.innerHTML = `${matter.first.amount}`;
 
 }
 
