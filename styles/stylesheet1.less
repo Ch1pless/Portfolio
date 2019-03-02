@@ -9,6 +9,12 @@
 	box-sizing: border-box;
 }
 
+h2 {
+	font-family: "Verdana";
+	font-size: 1em;
+	font-weight: bold;
+
+}
 
 .container {
 	background-color: white;
@@ -16,6 +22,8 @@
 }
 
 #home-page {
+	height: 100vh;
+	width: 100vw;
 	animation: fade-in 350ms ease both;
 	-webkit-animation: fade-in 350ms ease both;
 }
@@ -32,66 +40,27 @@
 	}
 }
 
-
-
-.header {
-	background-color: rgb(70,70,70);
-	color: white;
-	padding: 1em 0em;
+#game-container {
+	display: grid;
+	height: 100%;
+	width: 100%;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr;
+	grid-template-areas: 
+	"top-left top top-right"
+	"left middle right"
+	"bottom-left bottom bottom-right"
 }
 
-#head-text {
-	text-align: center;
-	margin: auto;
+#energy-container {
+	grid-area: top;
 }
 
-.navbar {
-	padding: 1em 1em;
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
+#nano-container {
+	grid-area: middle;
+
 }
 
-.navbtn {
-	margin: 0 0.5em;
-	padding: 0.5em 1em;
-	text-decoration: none;
-	color: white;
-	position: relative;
-}
-
-.btnbottom {
-	height: 3px;
-	width: 0;
-	border: none;
-	background-color: orange;
-	position: absolute;
-	bottom: -15%;
-	left: 0;
-}
-
-.navbtn:hover .btnbottom {
-	animation: slide calc(@fast-speed + 100ms) forwards;
-}
-@-webkit-keyframes slide {.slide-frames;}
-@-moz-keyframes slide {.slide-frames;}
-@keyframes slide {.slide-frames;}
-
-
-.slide-frames () {
-	0% {
-		width: 0;
-		animation-timing-function: linear;
-		left: 0;
-	}
-	75% {
-		width: 75%;
-		animation-timing-function: linear;
-		left: 0;
-	}
-	100% {
-		left: 12.5%;
-		width: 75%;
-		animation-timing-function: ease-out;
-	}
+p, h2 {
+	display: inline;
 }
