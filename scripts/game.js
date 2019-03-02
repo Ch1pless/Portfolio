@@ -15,18 +15,23 @@ let game = {
 function buyOne(item) {
 	switch (item) {
 		case 1:
+			if (game.energy >= game.nano1.cost) {	
 			game.energy = game.energy.sub(game.nano1.cost);
 			game.nano1.buyOne();
-			
+			}
 			break;
 		case 2: 
+			if (game.energy >= game.nano2.cost) {
 			game.energy = game.energy.sub(game.nano2.cost);
 			game.nano2.buyOne();
+			}
 			break;
 		case "t":
+			if (game.energy >= game.nanoSpeedCost) {
 			game.energy = game.energy.sub(game.nanoSpeedCost);
 			game.nanoSpeed = game.nanoSpeed.sub(game.nanoSpeed.times(0.11));
 			game.nanoSpeedCost = game.nanoSpeedCost.times(10);
+			}
 			break;
 	}
 	
@@ -38,7 +43,7 @@ function updateDisplay() {
 	document.getElementById("nanoSpeedBuy1").innerHTML = `Cost: ${cleanDisp(game.nanoSpeedCost)}`;
 	document.getElementById("nano1Amount").innerHTML = `NanoMachines: ${cleanDisp(game.nano1.amount.toDP(0))}`;
 	document.getElementById("nano1Buy1").innerHTML = `Cost: ${cleanDisp(game.nano1.cost)}`;
-	document.getElementById("nano2Amount").innerHTML = `NanoCreaters: ${cleanDisp(game.nano2.amount.toDP(0))}`;
+	document.getElementById("nano2Amount").innerHTML = `NanoCreators: ${cleanDisp(game.nano2.amount.toDP(0))}`;
 	document.getElementById("nano2Buy1").innerHTML = `Cost: ${cleanDisp(game.nano2.cost)}`;
 }
 
