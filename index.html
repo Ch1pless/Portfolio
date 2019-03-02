@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>Ooniversity</title>
+		<title>Nanomachines</title>
 		<link rel="shortcut icon" href="./images/chipicon.png">
 		<link rel="apple-touch-icon" href="./images/chipicon.png">
 		<!-- <link rel="stylesheet" href="./styles/stylesheet1.css"> --->
@@ -13,42 +13,35 @@
 
 	<body>
 		<div class="container" id="home-page">
-			<header class="header" id="home-header">
-				<div class="" id="amounts">
-					<div id="energyRow">
-						<p id="energyAmount"></p>
-					</div>
-					<div id="unitRow">
-						<p class="units" id="matterAmount"></p>
-						<p class="units" id="spaceAmount"></p>
-						<p class="units" id="timeAmount"></p>
-					</div>
-				</div>
-				<nav class="navbar" id="home-navbar">
-					<a href="./bump.html" class="navbtn">Bump
-						<hr class="btnbottom"></a>
-
-					<a href="./jump.html" class="navbtn">Jump
-						<hr class="btnbottom"></a>
-
-				</nav>
-			</header>
-
-			<div class="container" id="main-container">
-				<div class="row" id="spaceRow1">
-					<h2>First Matter Generator</h2>
-					<h2 id="firstMatterAmount"></h2>
-					<button type="button" name="button" id="firstMatterBuy1"></button>
-				</div>
-
+			<div id="game-container">
+				<table id="energy-container">
+				<tr>
+					<td><p>You have </p><h2 id="energyAmount"></h2><p> energy.</p></td>
+				</tr>
+				</table>
+			
+			
+				<table id="nano-container">
+				<tr>
+					<td><h2 id="nanoSpeed"></h2></td>
+					<td><button type="button" class="gamebtn" id="nanoSpeedBuy1"></button></td>
+				</tr>
+				<tr>
+					<td><h2 id="nano1Amount"></h2></td>
+					<td><button type="button" class="gamebtn" id="nano1Buy1"></button></td>
+				</tr>
+				<tr>
+					<td><h2 id="nano2Amount"></h2></td>
+					<td><button type="button" class="gamebtn" id="nano2Buy1"></button></td>
+				</table>
 			</div>
-
-			<footer class="footer" id="home-footer">
-			</footer>
+			
+			
+			
 		</div>
-
 		<script src="./scripts/decimal.min.js"></script>
 		<script src="./scripts/opening.js" charset="utf-8"></script>
+		<script src="./scripts/nano.js" charset="utf-8"></script>
 		<script src="./scripts/game.js" charset="utf-8"></script>
 	</body>
 
