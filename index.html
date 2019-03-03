@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>NanoMachines V0.01</title>
+		<title>Nanites V0.01</title>
 		<link rel="shortcut icon" href="./images/chipicon.png">
 		<link rel="apple-touch-icon" href="./images/chipicon.png">
 		<!-- <link rel="stylesheet" href="./styles/stylesheet1.css"> --->
@@ -16,34 +16,51 @@
 		<div class="container" id="home-page">
 			<div id="game-container">
 				<table id="energy-container">
-				<tr>
-					<td><p>You have </p><h2 id="energyAmount"></h2><p> energy.</p></td>
+				<tr id="energyRow">
+					<td>You have <h2 id="energyA"></h2> energy.</td>
+				</table>
+				
+				<table id="perSec-container">
+				<tr id="tickRow">
+					<td>Tickspeed: <h2 id="tickspeed"></h2></td>
+					<td><button class="gameBtn" id="tB1"></button></td>
+					<td><button class="gameBtn" id="tBM"></button></td>
 				</tr>
 				</table>
 			
-			
 				<table id="nano-container">
-				<tr id="maxSection">
-					<td><button type="button" class="gamebtn" id="maxBuy">Max All</button>
-				<tr id="nanoSpeedSection">
-					<td><h2 id="nanoSpeed"></h2></td>
-					<td><button type="button" class="gamebtn" id="nanoSpeedBuy1"></button></td>
+				<tr id="n0Row">
+					<td class="tcolumn">Nanites: <p id="n0P"></p></td>
+					<td class="acolumn"><h2 id="n0A"></h2></td>
+					<td class="b1column"><button class="gameBtn" id="n0B1"></button></td>
+					<td class="b2column"><button class="gameBtn" id="n0BM"></button></td>
 				</tr>
-				<tr id="nano1Display">
-					<td><h2 id="nano1Amount"></h2></td>
-					<td><button type="button" class="gamebtn" id="nano1Buy1"></button></td>
+				<tr id="n1Row">
+					<td class="tcolumn">NaniteCreator: <p id="n1P"></p></td>
+					<td class="acolumn"><h2 id="n1A"></h2></td>
+					<td class="b1column"><button class="gameBtn" id="n1B1"></button></td>
+					<td class="b2column"><button class="gameBtn" id="n1BM"></button></td>
 				</tr>
-				<tr id="nano2Section">
-					<td><h2 id="nano2Amount"></h2></td>
-					<td><button type="button" class="gamebtn" id="nano2Buy1"></button></td>
+				<tr id="n2Row">
+					<td class="tcolumn">NaniteC^2: <p id="n2P"></p></td>
+					<td class="acolumn"><h2 id="n2A"></h2></td>
+					<td class="b1column"><button class="gameBtn" id="n2B1"></button></td>
+					<td class="b2column"><button class="gameBtn" id="n2BM"></button></td>
 				</tr>
-				<tr id="nano3Section">
-					<td><h2 id="nano3Amount"></h2></td>
-					<td><button type="button" class="gamebtn" id="nano3Buy1"></button></td>
+				<tr id="n3Row">
+					<td class="tcolumn">NaniteC^3: <p id="n3P"></p></td>
+					<td class="acolumn"><h2 id="n3A"></h2></td>
+					<td class="b1column"><button class="gameBtn" id="n3B1"></button></td>
+					<td class="b2column"><button class="gameBtn" id="n3BM"></button></td>
+				</tr>
+				<tr id="n4Row">
+					<td class="tcolumn">NaniteC^4: <p id="n4P"></p></td>
+					<td class="acolumn"><h2 id="n4A"></h2></td>
+					<td class="b1column"><button class="gameBtn" id="n4B1"></button></td>
+					<td class="b2column"><button class="gameBtn" id="n4BM"></button></td>
 				</tr>
 				</table>
 			</div>
-			
 			
 			
 		</div>

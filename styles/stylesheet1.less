@@ -40,8 +40,8 @@ h2 {
 #home-page {
 	height: 100vh;
 	width: 100vw;
-	animation: fade-in 350ms ease both;
-	-webkit-animation: fade-in 350ms ease both;
+	animation: fade-in 1s ease both;
+	-webkit-animation: fade-in 1s ease both;
 }
 
 @keyframes fade-in {
@@ -60,25 +60,53 @@ h2 {
 	display: grid;
 	height: 100%;
 	width: 100%;
+	box-sizing: content-box;
 	grid-template-columns: 1fr 1fr 1fr;
 	grid-template-rows: 1fr 1fr 1fr;
 	grid-template-areas: 
 	"top-left top top-right"
-	"left middle right"
+	"middle middle middle"
 	"bottom-left bottom bottom-right"
 }
-
+td {
+	text-align: center;
+}
+tr {
+	padding: 0 1em;
+}
 #energy-container {
 	grid-area: top;
 	text-align: center;
 }
 
-#nano-container {
-	grid-area: middle;
-
+#perSec-container {
+	grid-area: top-right;
+	text-align: center;
 }
 
-.gamebtn {
+#nano-container {
+	grid-area: middle;
+}
+
+.tcolumn {
+	width: 30%;
+	text-align: left;
+}
+
+.acolumn {
+	width: 30%;
+	text-align: left;
+}
+
+.b1column {
+	width: 20%;
+}
+
+.b2column {
+	width: 20%;
+}
+
+.gameBtn {
 	box-sizing: content-box;
 	overflow: visible;
 	border-radius: 0;
@@ -93,18 +121,50 @@ h2 {
 }
 
 @media (max-width: 400px) {
+
 	#game-container {
-		height: auto;
+		display: flex;
+		flex-direction: rows;
+		flex-wrap: wrap;
+	}
+	
+	#energy-container {
+		width: 100vw;
+		height: 20vh;
+	}
+	#perSec-container {
+		width: 100vw;
+		height: 10vh;
+	}
+	#game-container {
+		width: 100vw;
+	}
+	.tcolumn {
+	width: 50vw;
+	}
+	.acolumn {
+	width: 50vw;
+	}
+	.b1column {
+	width: 50vw;
+	}
+	.b2column {
+	width: 50vw;
 	}
 }
 
 .av {
 	visibility: visible;
-	pointer-events: normal;
-	animation: fade-in 750ms both;
+	pointer-events: auto;
+	animation: fade-in 150ms both;
 }
 
 .unav {
 	visibility: hidden;
+	pointer-events: none;
+}
+
+.greyed {
+	background-color: rgb(175,175,175);
 	pointer-events: none;
 }
