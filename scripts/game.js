@@ -15,19 +15,19 @@ let game = {
 function buyOne(item) {
 	switch (item) {
 		case 1:
-			if (game.energy >= game.nano1.cost) {	
+			if (game.energy.greaterThanOrEqualTo(game.nano1.cost)) {	
 			game.energy = game.energy.sub(game.nano1.cost);
 			game.nano1.buyOne();
 			}
 			break;
 		case 2: 
-			if (game.energy >= game.nano2.cost) {
+			if (game.energy.greaterThanOrEqualTo(game.nano2.cost)) {
 			game.energy = game.energy.sub(game.nano2.cost);
 			game.nano2.buyOne();
 			}
 			break;
 		case "t":
-			if (game.energy >= game.nanoSpeedCost) {
+			if (game.energy.greaterThanOrEqualTo(game.nanoSpeedCost)) {
 			game.energy = game.energy.sub(game.nanoSpeedCost);
 			game.nanoSpeed = game.nanoSpeed.sub(game.nanoSpeed.times(0.11));
 			game.nanoSpeedCost = game.nanoSpeedCost.times(10);
