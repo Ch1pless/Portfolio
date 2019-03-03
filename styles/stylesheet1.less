@@ -9,11 +9,23 @@
 	box-sizing: border-box;
 }
 
-h2 {
+p, h1, h2, h3 {
+	display: inline;
 	font-family: "Verdana";
+}
+
+p {
+	font-size: 0.75em;
+}
+
+h1 {
 	font-size: 1em;
 	font-weight: bold;
+}
 
+h2 {
+	font-size: 1em;
+	font-weight: bold;
 }
 
 .container {
@@ -54,6 +66,7 @@ h2 {
 
 #energy-container {
 	grid-area: top;
+	text-align: center;
 }
 
 #nano-container {
@@ -61,28 +74,32 @@ h2 {
 
 }
 
-p, h2 {
-	display: inline;
-}
-
 .gamebtn {
 	box-sizing: content-box;
 	overflow: visible;
+	border-radius: 0;
+	border: 1px green solid;
+	padding: 2px 5px;
+	
+	&:hover {
+		background-color: green;
+		color: white;
+	}
 }
 
-@media (max-width: 320px) {
+@media (max-width: 400px) {
 	#game-container {
-		grid-template-colums: 1fr;
-		grid-template-rows: 1fr 1fr 1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr;
-		grid-template-areas:
-		"top"
-		"middle"
-		"bottom"
-		"top-left"
-		"top-right"
-		"left"
-		"right"
-		"bottom-left"
-		"bottom-right"
+		height: auto;
 	}
+}
+
+.av {
+	visibility: visible;
+	pointer-events: normal;
+	animation: fade-in 750ms both;
+}
+
+.unav {
+	visibility: hidden;
+	pointer-events: none;
 }

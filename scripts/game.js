@@ -47,17 +47,38 @@ function updateDisplay() {
 	document.getElementById("nano2Buy1").innerHTML = `Cost: ${cleanDisp(game.nano2.cost)}`;
 }
 
-function updateEnergy() {
+function updateAmounts() {
 	game.energy = game.energy.plus(productionPerSec(game.nano1,game.nanoSpeed,updateRate));
-}
-
-function updateItems() {
 	game.nano1.amount = game.nano1.amount.plus(productionPerSec(game.nano2,game.nanoSpeed,updateRate));
 }
 
+function updateMilestones() {
+	if (game.nano1.amount < 1) {
+		document.getElementById("energy-container").classList.remove("av");
+		document.getElementById("energy-container").classList.add("unav");
+		document.getElementById("nano2Section").classList.remove("av");
+		document.getElementById("nano2Section").classList.add("unav");
+	} else {
+		document.getElementById("energy-container").classList.remove("unav");
+		document.getElementById("energy-container").classList.add("av");
+		document.getElementById("nano2Section").classList.remove("unav");
+		document.getElementById("nano2Section").classList.add("av");
+	}
+	if (game.nano1.amount < 10) {
+		document.getElementById("nanoSpeedSection").classList.remove("av");
+		document.getElementById("nanoSpeedSection").classList.add("unav");
+	} else {
+		document.getElementById("nanoSpeedSection").classList.remove("unav");
+		document.getElementById("nanoSpeedSection").classList.add("av");
+	}
+	
+	
+	
+}
+
 function gameTick() {
-	updateEnergy();
-	updateItems();
+	updateAmounts();
+	updateMilestones();
 	updateDisplay();
 }
 
