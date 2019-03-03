@@ -8,15 +8,9 @@ function nano(cost, amount, bought, power) {
 		this.amount = this.amount.plus(1);
 		this.bought = this.bought.plus(1);
 	}
-}
-
-function productionPerSec(item, tickSpeed, updateRate) {
-	let perSec = item.amount.times(item.pow).times(1000/tickSpeed).dividedBy(updateRate);
-	return perSec;
-}
-
-function cleanDisp(number) {
-		let clean = number.toDP(3,Decimal.ROUND_DOWN).toString();
-		clean = clean.replace("+","");
-		return clean;
+	this.buyMax = function (total) {
+		this.amount = this.amount.plus(total);
+		this.bought = this.bought.plus(total);
 	}
+}
+
