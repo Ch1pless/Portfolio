@@ -68,19 +68,27 @@ h2 {
 	"middle middle middle"
 	"bottom-left bottom bottom-right"
 }
+
 td {
 	text-align: center;
 }
-tr {
-	padding: 0 1em;
-}
-#energy-container {
+
+
+#top-container {
 	grid-area: top;
-	text-align: center;
 }
 
-#perSec-container {
-	grid-area: top-right;
+#energy {
+	width: 100%;
+	padding: 1em;
+}
+
+#tick {
+	width: 100%;
+	padding: 0.1em;
+}
+
+#tickRow {
 	text-align: center;
 }
 
@@ -153,18 +161,17 @@ tr {
 	}
 }
 
-.av {
-	visibility: visible;
-	pointer-events: auto;
-	animation: fade-in 150ms both;
-}
-
 .unav {
 	visibility: hidden;
 	pointer-events: none;
 }
 
 .greyed {
-	background-color: rgb(175,175,175);
+	background-color: rgb(160,160,160);
 	pointer-events: none;
+	border: 1px red solid;
+	&:hover {
+		background-color: red;
+		color: white;
+	}
 }

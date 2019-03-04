@@ -34,6 +34,10 @@ function canBuy(item, costItem) {
 	return costItem.greaterThanOrEqualTo(item.cost);
 }
 
+function canBuyTillNext(item, costItem) {
+	return costItem.greaterThanOrEqualTo(item.cost.times(item.tillNext));
+}
+
 function buyOneCalc(item, costItem) {
 	item.buyOne();
 	if (item.bought.modulo(10) == 0 && !item.bought.equals(0)) {
@@ -170,6 +174,58 @@ function updateDisplay() {
 	document.getElementById("n4A").innerHTML = `${format(nanite[4].amount)}`;
 	document.getElementById("n4B1").innerHTML = `Cost: ${format(nanite[4].cost)} naniteC^3s`;
 	document.getElementById("n4BM").innerHTML = `To Next: ${nanite[4].tillNext}, Cost: ${format(nanite[4].cost.times(nanite[4].tillNext))}`;
+	if (!canBuy(nanite[0], game.energy)) {
+		document.getElementById("n0B1").classList.add("greyed");
+		document.getElementById("n0BM").classList.add("greyed");
+	} else {
+		document.getElementById("n0B1").classList.remove("greyed");
+		document.getElementById("n0BM").classList.remove("greyed");
+	}
+	if (!canBuy(nanite[1], nanite[0].amount)) {
+		document.getElementById("n1B1").classList.add("greyed");
+	} else {
+		document.getElementById("n1B1").classList.remove("greyed");
+	}
+	if (!canBuyTillNext(nanite[1], nanite[0].amount)) {
+		document.getElementById("n1BM").classList.add("greyed");
+	} else {
+		document.getElementById("n1BM").classList.remove("greyed");
+	}
+	if (!canBuy(nanite[2], nanite[1].amount)) {
+		document.getElementById("n2B1").classList.add("greyed");
+	} else {
+		document.getElementById("n2B1").classList.remove("greyed");
+	}
+	if (!canBuyTillNext(nanite[2], nanite[1].amount)) {
+		document.getElementById("n2BM").classList.add("greyed");
+	} else {
+		document.getElementById("n2BM").classList.remove("greyed");
+	}
+	if (!canBuy(nanite[3], nanite[2].amount)) {
+		document.getElementById("n3B1").classList.add("greyed");
+	} else {
+		document.getElementById("n3B1").classList.remove("greyed");
+	}
+	if (!canBuyTillNext(nanite[3], nanite[2].amount)) {
+		document.getElementById("n3BM").classList.add("greyed");
+	} else {
+		document.getElementById("n3BM").classList.remove("greyed");
+	}
+	if (!canBuy(nanite[4], nanite[3].amount)) {
+		document.getElementById("n4B1").classList.add("greyed");
+	} else {
+		document.getElementById("n4B1").classList.remove("greyed");
+	}
+	if (!canBuyTillNext(nanite[4], nanite[3].amount)) {
+		document.getElementById("n4BM").classList.add("greyed");
+	} else {
+		document.getElementById("n4BM").classList.remove("greyed");
+	}
+	if (!canBuy(game.tick, game.energy)) {
+		document.getElementById("tB1").classList.add("greyed");
+	} else {
+		document.getElementById("tB1").classList.remove("greyed");
+	}
 }
 
 function updateAmounts() {
@@ -182,41 +238,28 @@ function updateAmounts() {
 
 function updateMilestones() {
 	if (nanite[0].amount.lessThan(1)) {
-		document.getElementById("energy-container").classList.remove("av");
-		document.getElementById("energy-container").classList.add("unav");
-		document.getElementById("n1Row").classList.remove("av");
+		document.getElementById("energyRow").classList.add("unav");
 		document.getElementById("n1Row").classList.add("unav");
 	} else {
-		document.getElementById("energy-container").classList.remove("unav");
-		document.getElementById("energy-container").classList.add("av");
+		document.getElementById("energyRow").classList.remove("unav");
 		document.getElementById("n1Row").classList.remove("unav");
-		document.getElementById("n1Row").classList.add("av");
 	}
-	
 	if (nanite[1].amount.lessThan(1)) {
-		document.getElementById("tickRow").classList.remove("av");
 		document.getElementById("tickRow").classList.add("unav");
-		document.getElementById("n2Row").classList.remove("av");
 		document.getElementById("n2Row").classList.add("unav");
 	} else {
 		document.getElementById("tickRow").classList.remove("unav");
-		document.getElementById("tickRow").classList.add("av");
 		document.getElementById("n2Row").classList.remove("unav");
-		document.getElementById("n2Row").classList.add("av");
 	}
 	if (nanite[2].amount.lessThan(1)) {
-		document.getElementById("n3Row").classList.remove("av");
 		document.getElementById("n3Row").classList.add("unav");
 	} else {
 		document.getElementById("n3Row").classList.remove("unav");
-		document.getElementById("n3Row").classList.add("av");
 	}
 	if (nanite[3].amount.lessThan(1)) {
-		document.getElementById("n4Row").classList.remove("av");
 		document.getElementById("n4Row").classList.add("unav");
 	} else {
 		document.getElementById("n4Row").classList.remove("unav");
-		document.getElementById("n4Row").classList.add("av");
 	}
 }
 
@@ -252,158 +295,6 @@ window.addEventListener("keydown", (event) => {
 		
 	}	
 });
-
-/*
-let game = {
-	energy: new Decimal(10),
-	//new nano(cost, amount, bought, power, upkeep, upEff, upEffMult)
-	nano1: new nano(10,0,0,1,0.5,2,upgCM[0]),
-	nano2: new nano(100,0,0,1,5,2,0),
-	nano3: new nano(1000,0,0,1,50,2,0),
-	nanoSpeed: {
-		speed: new Decimal(1000),
-		cost: new Decimal(100),
-		multiplier: new Decimal(10)
-	}
-}
-
-function prodPerSec(item) {
-	let perSec = item.amount.times(item.pow).times(1000/game.nanoSpeed.speed).dividedBy(updateRate);
-	return perSec;
-}
-
-function format(item) {
-	if (item.isType() == "Decimal") {
-	return `${d}e${e}`;
-	} else {
-		
-	}
-}
-
-function canBuy(item) {
-	return game.energy.greaterThanOrEqualTo(item.cost);
-}
-
-function buyOneCalc(item) {
-	game.energy = game.energy.sub(item.cost);
-	item.buyOne();
-}
-
-function buyOne(item) {
-	switch (item) {
-		case 1:
-			if (canBuy(game.nano1)) buyOneCalc(game.nano1);
-			break;
-		case 2: 
-			if (canBuy(game.nano2)) buyOneCalc(game.nano2);
-			break;
-		case 3:
-			if (canBuy(game.nano3)) buyOneCalc(game.nano3);
-			break;
-		case "t":
-			if (canBuy(game.nanoSpeed)) {
-			game.energy = game.energy.sub(game.nanoSpeed.cost);
-			game.nanoSpeed.speed = game.nanoSpeed.speed.sub(game.nanoSpeed.speed.times(0.11));
-			game.nanoSpeed.cost = game.nanoSpeed.cost.times(game.nanoSpeed.multiplier);
-			}
-			break;
-	}
-	
-}
-
-function buyMaxCalc(item) {
-	let total = game.energy.dividedBy(item.cost).floor();
-	game.energy = game.energy.sub(item.cost.times(total));
-	item.buyMax(total);
-}
-
-function buyMax() {
-	if (canBuy(game.nanoSpeed)) {
-		game.energy = game.energy.sub(game.nanoSpeed.cost);
-		game.nanoSpeed.speed = game.nanoSpeed.speed.sub(game.nanoSpeed.speed.times(0.11));
-		game.nanoSpeed.cost = game.nanoSpeed.cost.times(game.nanoSpeed.multiplier);		
-	}
-	if (canBuy(game.nano3)) buyMaxCalc(game.nano3);
-	if (canBuy(game.nano2)) buyMaxCalc(game.nano2);
-	if (canBuy(game.nano1)) buyMaxCalc(game.nano1);
-}
-
-
-function updateDisplay() {
-	document.getElementById("energyAmount").innerHTML = `${clean(game.energy)}`;
-	document.getElementById("energyPerSec").innerHTML = `${prodPerSec(game.nano1)}`;
-	document.getElementById("upkeepPerSec").innerHTML = `${upkeepPerSec(game.nano1).plus(upkeepPerSec(game.nano2)).plus(upkeepPerSec(game.nano3)).toSD(3)}`;
-	document.getElementById("nanoSpeed").innerHTML = `NanoSpeed: ${cleanTick(game.nanoSpeed.speed)} ms per tick`;
-	document.getElementById("nanoSpeedBuy1").innerHTML = `Cost: ${clean(game.nanoSpeed.cost)}`;
-	document.getElementById("nano1Amount").innerHTML = `NanoMachines: ${clean(game.nano1.amount)}`;
-	document.getElementById("nano1Buy1").innerHTML = `Cost: ${clean(game.nano1.cost)}`;
-	document.getElementById("nano1Up").innerHTML = `NanoMachines: ${clean(game.nano1.upgradeCost)}`;
-	document.getElementById("nano2Amount").innerHTML = `NanoCreators: ${clean(game.nano2.amount)}`;
-	document.getElementById("nano2Buy1").innerHTML = `Cost: ${clean(game.nano2.cost)}`;
-	document.getElementById("nano3Amount").innerHTML = `NanoC2: ${clean(game.nano3.amount)}`;
-	document.getElementById("nano3Buy1").innerHTML = `Cost: ${clean(game.nano3.cost)}`;
-}
-
-function updateAmounts() {
-	game.energy = game.energy.plus(prodPerSec(game.nano1)).sub(upkeepPerSec(game.nano1).plus(upkeepPerSec(game.nano2)).plus(upkeepPerSec(game.nano3)));
-	game.nano1.amount = game.nano1.amount.plus(prodPerSec(game.nano2));
-	game.nano2.amount = game.nano2.amount.plus(prodPerSec(game.nano3));
-	game.nano1.updateUpkeep();
-	game.nano2.updateUpkeep();
-}
-
-function updateMilestones() {
-	if (game.nano1.amount.lessThan(1)) {
-		document.getElementById("energy-container").classList.remove("av");
-		document.getElementById("energy-container").classList.add("unav");
-		document.getElementById("nano2Section").classList.remove("av");
-		document.getElementById("nano2Section").classList.add("unav");
-	} else {
-		document.getElementById("energy-container").classList.remove("unav");
-		document.getElementById("energy-container").classList.add("av");
-		document.getElementById("nano2Section").classList.remove("unav");
-		document.getElementById("nano2Section").classList.add("av");
-	}
-	if (game.nano1.amount.lessThan(10)) {
-		document.getElementById("nanoSpeedSection").classList.remove("av");
-		document.getElementById("nanoSpeedSection").classList.add("unav");
-		document.getElementById("nano3Section").classList.remove("av");
-		document.getElementById("nano3Section").classList.add("unav");
-	} else {
-		document.getElementById("nanoSpeedSection").classList.remove("unav");
-		document.getElementById("nanoSpeedSection").classList.add("av");
-		document.getElementById("nano3Section").classList.remove("unav");
-		document.getElementById("nano3Section").classList.add("av");
-	}
-}
-
-function gameTick() {
-	updateAmounts();
-	updateMilestones();
-	updateDisplay();
-}
-
-let gameInterval;
-gameInterval = setInterval(gameTick, updateRate);
-
-window.addEventListener("load", updateDisplay);
-document.getElementById("nanoSpeedBuy1").addEventListener("click", () => buyOne("t"));
-document.getElementById("nano1Buy1").addEventListener("click", () => buyOne(1));
-document.getElementById("nano1Up").addEventListener("click", () => upgradeEfficiency(1));
-document.getElementById("nano2Buy1").addEventListener("click", () => buyOne(2));
-document.getElementById("nano3Buy1").addEventListener("click", () => buyOne(3));
-document.getElementById("maxBuy").addEventListener("click", () => buyMax());
-window.addEventListener("keydown", (event) => {
-	switch (event.keyCode) {
-		case 77: //M
-			document.getElementById("maxBuy").click();
-			break;
-		
-	}	
-});
-
-
-*/
 
 
 
