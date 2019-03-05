@@ -19,28 +19,28 @@ for (let i = 1; i < 6; i++) {
 	nanite.push(nanos);
 }
 function format(item) {
-	if (item.lessThan(1000)) return item.trunc().toString();
+	if (item.lt(1000)) return item.trunc().toString();
 	item = item.toSD(3,Decimal.ROUND_DOWN).toString();
 	item = item.replace("+","");
 	return item;
 }
 
 function prodPerSec(item) {
-	let perSec = item.amount.times(item.pow).times(1000/game.tick.speed).dividedBy(1000/updateRate);
+	let perSec = item.amount.times(item.pow).times(1000/game.tick.speed).div(1000/updateRate);
 	return perSec;
 }
 
 function canBuy(item, costItem) {
-	return costItem.greaterThanOrEqualTo(item.cost);
+	return costItem.gte(item.cost);
 }
 
 function canBuyTillNext(item, costItem) {
-	return costItem.greaterThanOrEqualTo(item.cost.times(item.tillNext));
+	return costItem.gte(item.cost.times(item.tillNext));
 }
 
 function buyOneCalc(item, costItem) {
 	item.buyOne();
-	if (item.bought.modulo(10) == 0 && !item.bought.equals(0)) {
+	if (item.bought.mod(10) == 0 && !item.bought.eq(0)) {
 		item.cost = item.cost.times(costMults[nanite.indexOf(item)]).floor();
 		if (item != nanite[0]) {
 			item.pow = item.pow.times(2);
@@ -48,7 +48,7 @@ function buyOneCalc(item, costItem) {
 	} else {
 		item.cost = item.cost;
 	}
-	
+
 }
 
 function buyOne(item) {
@@ -56,10 +56,10 @@ function buyOne(item) {
 		case 0:
 			if (canBuy(nanite[0], game.energy)) {
 				game.energy = game.energy.minus(nanite[0].cost);
-				buyOneCalc(nanite[0], game.energy); 
+				buyOneCalc(nanite[0], game.energy);
 			}
 			break;
-		case 1: 
+		case 1:
 			if (canBuy(nanite[1], nanite[0].amount)) {
 				nanite[0].amount = nanite[0].amount.minus(nanite[1].cost);
 				buyOneCalc(nanite[1], nanite[0].amount);
@@ -82,16 +82,16 @@ function buyOne(item) {
 				nanite[3].amount = nanite[3].amount.minus(nanite[4].cost);
 				buyOneCalc(nanite[4], nanite[3].amount);
 			}
-			break;	
+			break;
 		case "t":
 			if (canBuy(game.tick, game.energy)) {
-			game.energy = game.energy.sub(game.tick.cost);
-			game.tick.speed = game.tick.speed.sub(game.tick.speed.times(0.11));
+			game.energy = game.energy.minus(game.tick.cost);
+			game.tick.speed = game.tick.speed.minus(game.tick.speed.times(0.11));
 			game.tick.cost = game.tick.cost.times(costMults[5]);
 			}
 			break;
 	}
-	
+
 }
 
 
@@ -105,7 +105,7 @@ function buyNextSingle(item, currency, index) {
 
 
 function buyMaxCalc(item, currency, index) {
-	let total = currency.dividedBy(item.cost).floor();
+	let total = currency.div(item.cost).floor();
 	for (i in total) {
 		buyOne(index);
 	}
@@ -117,7 +117,7 @@ function buyMax(item) {
 		case 0:
 			buyMaxCalc(nanite[0], game.energy, 0);
 			break;
-		case 1: 
+		case 1:
 			buyNextSingle(nanite[1], nanite[0].amount, 1);
 			break;
 		case 2:
@@ -128,7 +128,7 @@ function buyMax(item) {
 			break;
 		case 4:
 			buyNextSingle(nanite[4], nanite[3].amount, 4);
-			break;	
+			break;
 		case "t":
 			buyMaxCalc(game.tick, game.energy, "t");
 			break;
@@ -136,16 +136,12 @@ function buyMax(item) {
 }
 
 function buyMaxAll() {
-	if (canBuy(game.tick, game.energy)) {
-		game.energy = game.energy.sub(game.tick.cost);
-		game.tick.speed = game.tick.speed.sub(game.tick.speed.times(0.11));
-		game.tick.cost = game.tick.cost.times(costMults[6]);		
-	}
-	if (canBuy(nanite[4], nanite[3].amount)) buyMaxCalc(nanite[4], 4);
-	if (canBuy(nanite[3], nanite[2].amount)) buyMaxCalc(nanite[3], 3);
-	if (canBuy(nanite[2], nanite[1].amount)) buyMaxCalc(nanite[2], 2);
-	if (canBuy(nanite[1], nanite[0].amount)) buyMaxCalc(nanite[1], 1);
-	if (canBuy(nanite[0], game.energy)) buyMaxCalc(nanite[0], 0);
+	if (canBuy(game.tick, game.energy)) buyMaxCalc(game.tick, game.energy, "t");
+	if (canBuy(nanite[4], nanite[3].amount)) buyMaxCalc(nanite[4], nanite[3].amount, 4);
+	if (canBuy(nanite[3], nanite[2].amount)) buyMaxCalc(nanite[3], nanite[2].amount, 3);
+	if (canBuy(nanite[2], nanite[1].amount)) buyMaxCalc(nanite[2], nanite[1].amount, 2);
+	if (canBuy(nanite[1], nanite[0].amount)) buyMaxCalc(nanite[1], nanite[0].amount, 1);
+	if (canBuy(nanite[0], game.energy)) buyMaxCalc(nanite[0], game.energy, 0);
 }
 
 function updateDisplay() {
@@ -237,42 +233,72 @@ function updateAmounts() {
 }
 
 function updateMilestones() {
-	if (nanite[0].amount.lessThan(1)) {
-		document.getElementById("energyRow").classList.add("unav");
-		document.getElementById("n1Row").classList.add("unav");
-	} else {
+	if (nanite[0].amount.gte(1) || nanite[1].amount.gte(1)) {
 		document.getElementById("energyRow").classList.remove("unav");
 		document.getElementById("n1Row").classList.remove("unav");
-	}
-	if (nanite[1].amount.lessThan(1)) {
-		document.getElementById("tickRow").classList.add("unav");
-		document.getElementById("n2Row").classList.add("unav");
 	} else {
+		document.getElementById("energyRow").classList.add("unav");
+		document.getElementById("n1Row").classList.add("unav");
+	}
+	if (nanite[1].amount.gte(1) || nanite[2].amount.gte(1)) {
 		document.getElementById("tickRow").classList.remove("unav");
 		document.getElementById("n2Row").classList.remove("unav");
-	}
-	if (nanite[2].amount.lessThan(1)) {
-		document.getElementById("n3Row").classList.add("unav");
 	} else {
+		document.getElementById("tickRow").classList.add("unav");
+		document.getElementById("n2Row").classList.add("unav");
+	}
+	if (nanite[2].amount.gte(1) || nanite[3].amount.gte(1)) {
 		document.getElementById("n3Row").classList.remove("unav");
-	}
-	if (nanite[3].amount.lessThan(1)) {
-		document.getElementById("n4Row").classList.add("unav");
 	} else {
-		document.getElementById("n4Row").classList.remove("unav");
+		document.getElementById("n3Row").classList.add("unav");
 	}
+	if (nanite[3].amount.gte(1) || nanite[4].amount.gte(1)) {
+		document.getElementById("n4Row").classList.remove("unav");
+	} else {
+		document.getElementById("n4Row").classList.add("unav");
+	}
+}
+
+let requestLoop,
+startTime = Date.now(),
+fps,
+now,
+then,
+elapsed;
+function gameLoop() {
+	fps = 1000 / updateRate;
+	then = Date.now();
+	startTime = then;
+	gameTick();
 }
 
 function gameTick() {
-	updateAmounts();
-	updateMilestones();
-	updateDisplay();
+	requestAnimationFrame(gameTick);
+
+	now = Date.now();
+	elapsed = now - then;
+
+	if (elapsed > fps) {
+		then = now - (elapsed % fps);
+
+		updateAmounts();
+		updateMilestones();
+		updateDisplay();
+	}
+
 }
 
-let gameInterval;
-gameInterval = setInterval(gameTick, updateRate);
+
+
+requestAnimationFrame(gameLoop)
+
+//cancelAnimationFrame(requestLoop)
+
+//let gameInterval;
+//gameInterval = setInterval(gameTick, updateRate);
 
 window.addEventListener("load", updateDisplay);
+
 document.getElementById("tB1").addEventListener("click", () => buyOne("t"));
 document.getElementById("tBM").addEventListener("click", () => buyMax("t"));
 document.getElementById("n0B1").addEventListener("click", () => buyOne(0));
@@ -285,16 +311,13 @@ document.getElementById("n3B1").addEventListener("click", () => buyOne(3));
 document.getElementById("n3BM").addEventListener("click", () => buyMax(3));
 document.getElementById("n4B1").addEventListener("click", () => buyOne(4));
 document.getElementById("n4BM").addEventListener("click", () => buyMax(4));
+document.getElementById("maxBuy").addEventListener("click", () => buyMaxAll());
 
-//document.getElementById("maxBuy").addEventListener("click", () => buyMax());
 window.addEventListener("keydown", (event) => {
 	switch (event.keyCode) {
 		case 77: //M
 			document.getElementById("maxBuy").click();
 			break;
-		
-	}	
+
+	}
 });
-
-
-
