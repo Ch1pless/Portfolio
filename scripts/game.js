@@ -8,9 +8,9 @@ let game = {
    tick: {
 		//testspeed: new Decimal(1e2),
 		//normalspeed: new Decimal(1e3),
-      speed: new Decimal(500),
+      speed: new Decimal(1e3),
       cost: new Decimal(1e3),
-      decrement: new Decimal(0.9),
+      decrement: new Decimal(0.89),
 		costMult: new Decimal(1e1)
    },
    nsphere: new NanoSphere(),
