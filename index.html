@@ -16,9 +16,9 @@
 		<div class="container" id="home-page">
 			<div id="game-container">
 				<div id="top-container">
-					<table id="energy">
-						<tr id="energyRow">
-							<td>You have <h2 id="energyA"></h2> energy.</td>
+					<table id="nanite">
+						<tr id="naniteRow">
+							<td>You have <h2 id="naniteA"></h2> nanites.</td>
 						</tr>
 					</table>
 					<table id="tick">
@@ -29,6 +29,12 @@
 							<td><button class="gameBtn" id="tBM"></button></td>
 						</tr>
 					</table>
+					<table id="nboosts">
+						<tr id="nboostsRow">
+							<td><button class="gameBtn" id="nsphereBtn">Content</button></td>
+							<td><button class="gameBtn" id="nchipBtn"></button></td>
+						</tr>
+					</table>
 					<table id="max">
 						<tr>
 							<td><button class="gameBtn" id="maxBuy">Max All</button></td>
@@ -37,18 +43,9 @@
 				</div>
 
 
-				<table id="nano-container">
-					<tr id="n0Row">
-						<td class="tcolumn">Nanites: <p id="n0P"></p>
-						</td>
-						<td class="acolumn">
-							<h2 id="n0A"></h2>
-						</td>
-						<td class="b1column"><button class="gameBtn" id="n0B1"></button></td>
-						<td class="b2column"><button class="gameBtn" id="n0BM"></button></td>
-					</tr>
+				<table id="nanC-container">
 					<tr id="n1Row">
-						<td class="tcolumn">NaniteC^1: <p id="n1P"></p>
+						<td class="tcolumn">NaniteC: <p id="n1P"></p>
 						</td>
 						<td class="acolumn">
 							<h2 id="n1A"></h2>
@@ -57,7 +54,7 @@
 						<td class="b2column"><button class="gameBtn" id="n1BM"></button></td>
 					</tr>
 					<tr id="n2Row">
-						<td class="tcolumn">NaniteC^2: <p id="n2P"></p>
+						<td class="tcolumn">NaniteC<sup>2</sup>: <p id="n2P"></p>
 						</td>
 						<td class="acolumn">
 							<h2 id="n2A"></h2>
@@ -66,7 +63,7 @@
 						<td class="b2column"><button class="gameBtn" id="n2BM"></button></td>
 					</tr>
 					<tr id="n3Row">
-						<td class="tcolumn">NaniteC^3: <p id="n3P"></p>
+						<td class="tcolumn">NaniteC<sup>3</sup>: <p id="n3P"></p>
 						</td>
 						<td class="acolumn">
 							<h2 id="n3A"></h2>
@@ -75,7 +72,7 @@
 						<td class="b2column"><button class="gameBtn" id="n3BM"></button></td>
 					</tr>
 					<tr id="n4Row">
-						<td class="tcolumn">NaniteC^4: <p id="n4P"></p>
+						<td class="tcolumn">NaniteC<sup>4</sup>: <p id="n4P"></p>
 						</td>
 						<td class="acolumn">
 							<h2 id="n4A"></h2>
@@ -83,14 +80,23 @@
 						<td class="b1column"><button class="gameBtn" id="n4B1"></button></td>
 						<td class="b2column"><button class="gameBtn" id="n4BM"></button></td>
 					</tr>
+					<tr id="n5Row">
+						<td class="tcolumn">NaniteC<sup>5</sup>: <p id="n5P"></p>
+						</td>
+						<td class="acolumn">
+							<h2 id="n5A"></h2>
+						</td>
+						<td class="b1column"><button class="gameBtn" id="n5B1"></button></td>
+						<td class="b2column"><button class="gameBtn" id="n5BM"></button></td>
+					</tr>
 				</table>
 			</div>
 
-
+			<p id="speedNote">The game is sped up for testing purposes, expect the final game to be slower.</p>
 		</div>
 		<script src="./scripts/decimal.min.js"></script>
 		<script src="./scripts/opening.js" charset="utf-8"></script>
-		<script src="./scripts/nano.js" charset="utf-8"></script>
+		<script src="./scripts/naniteClasses.js" charset="utf-8"></script>
 		<script src="./scripts/game.js" charset="utf-8"></script>
 	</body>
 

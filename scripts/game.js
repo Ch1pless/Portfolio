@@ -1,290 +1,408 @@
-Decimal.set({toExpPos: 4});
+Decimal.set({
+   toExpPos: 4
+});
 let updateRate = 50;
-let costMults = [1,1e3,1e5,1e7,1e9,10];
+let costMults = [1e3, 1e5, 1e7, 1e9, 1e11];
 let game = {
-	energy: new Decimal(10),
-	tick: {
-		speed: new Decimal(1000),
-		cost: new Decimal(1e3),
-		decrement: new Decimal(0.9)
-	},
-	upgrades: [],
-	achievements: [],
-	smallResearch: 0
+   nanite: new Decimal(10),
+   tick: {
+		//testspeed: new Decimal(1e2),
+		//normalspeed: new Decimal(1e3),
+      speed: new Decimal(500),
+      cost: new Decimal(1e3),
+      decrement: new Decimal(0.9),
+		costMult: new Decimal(1e1)
+   },
+   nsphere: new NanoSphere(),
+   nchip: new NanoChip(1),
+   researcher: new Researcher(1e4, 0, 0, 1),
+   researchPoints: new Decimal(0),
+   upgrades: [],
+   achievements: []
+}
+let g = game;
+
+let nanC = [];
+/*for (let i = 1; i < 6; i++) {
+   let naniteC = new NaniteCreator(Math.pow(10,Math.pow(i,i)), 0, 0, 1);
+   nanC.push(naniteC);
+}*/
+nanC[0] = new NaniteCreator(1e1,0,0,1);
+nanC[1] = new NaniteCreator(1e2,0,0,1);
+nanC[2] = new NaniteCreator(1e8,0,0,1);
+nanC[3] = new NaniteCreator(1e14,0,0,1);
+nanC[4] = new NaniteCreator(1e20,0,0,1);
+
+
+function formatDecimals(item) {
+	let temp = item.toSD(3, Decimal.ROUND_DOWN).toString();
+	temp = temp.replace("+", "")
+	return temp;
 }
 
-let nanite = [];
-for (let i = 1; i < 6; i++) {
-	let nanos = new nano(10,0,0,1);
-	nanite.push(nanos);
-}
 function format(item) {
-	if (item.lt(1000)) return item.trunc().toString();
-	item = item.toSD(3,Decimal.ROUND_DOWN).toString();
-	item = item.replace("+","");
-	return item;
+   if (item.lt(1000)) return item.trunc().toString();
+   let temp = item.toSD(3, Decimal.ROUND_DOWN).toString();
+   temp = temp.replace("+", "");
+   return temp;
 }
 
 function prodPerSec(item) {
-	let perSec = item.amount.times(item.pow).times(1000/game.tick.speed).div(1000/updateRate);
-	return perSec;
+	let power = item.pow.times(g.nsphere.pow).times(g.nchip.pow),
+	tPS = 1000/g.tick.speed;
+   let perSec = item.amount.times(power).times(tPS).div(updateRate);
+   return perSec;
 }
 
 function canBuy(item, costItem) {
-	return costItem.gte(item.cost);
+	if (item.available != null || item.available != undefined) {
+		if (item.available && costItem.gte(item.cost)) return true; else return false;
+	} else {
+		if (costItem.gte(item.cost)) return true; else return false;
+	}
+
 }
 
 function canBuyTillNext(item, costItem) {
-	return costItem.gte(item.cost.times(item.tillNext));
+
+	if (item.available != null || item.available != undefined) {
+		if (item.available && costItem.gte(item.cost.times(item.tillNext))) return true; else return false;
+	} else {
+		if (costItem.gte(item.cost.times(item.tillNext))) return true; else return false;
+	}
+}
+
+function canChip() {
+	if (g.nsphere.pow.gte(16)) return true; else return false;
+}
+
+function boostChip() {
+	if (canChip()) {
+		g.nchip.boost(g.nsphere.pow.div(10));
+		g.nanite = new Decimal(10);
+	   g.tick.speed = new Decimal(1e1);
+	   g.tick.cost = new Decimal(1e3);
+	   g.tick.decrement = new Decimal(0.9);
+		g.tick.costMult = new Decimal(1e1);
+	   g.nsphere = new NanoSphere();
+	   g.researcher = new Researcher(1e4, 0, 0, 1);
+	   g.researchPoints = new Decimal(0);
+		nanC[0] = new NaniteCreator(1e1,0,0,1);
+		nanC[0].availtrue();
+		nanC[1] = new NaniteCreator(1e2,0,0,1);
+		nanC[2] = new NaniteCreator(1e8,0,0,1);
+		nanC[3] = new NaniteCreator(1e14,0,0,1);
+		nanC[4] = new NaniteCreator(1e20,0,0,1);
+	}
 }
 
 function buyOneCalc(item, costItem) {
-	item.buyOne();
-	if (item.bought.mod(10) == 0 && !item.bought.eq(0)) {
-		item.cost = item.cost.times(costMults[nanite.indexOf(item)]).floor();
-		if (item != nanite[0]) {
-			item.pow = item.pow.times(2);
-		}
-	} else {
-		item.cost = item.cost;
-	}
-
+		item.buyOne();
+	   if (item.bought.mod(10) == 0 && !item.bought.eq(0)) {
+	      item.cost = item.cost.times(costMults[nanC.indexOf(item)]).floor();
+	      item.pow = item.pow.times(2);
+	   } else {
+	      item.cost = item.cost;
+	   }
 }
 
 function buyOne(item) {
-	switch (item) {
-		case 0:
-			if (canBuy(nanite[0], game.energy)) {
-				game.energy = game.energy.minus(nanite[0].cost);
-				buyOneCalc(nanite[0], game.energy);
+   switch (item) {
+      case 0:
+         if (canBuy(nanC[0], g.nanite)) {
+            g.nanite = g.nanite.minus(nanC[0].cost);
+            buyOneCalc(nanC[0], g.nanite);
+         }
+         break;
+      case 1:
+         if (canBuy(nanC[1], g.nanite)) {
+            g.nanite = g.nanite.minus(nanC[1].cost);
+            buyOneCalc(nanC[1], g.nanite);
+         }
+         break;
+      case 2:
+         if (canBuy(nanC[2], g.nanite)) {
+            g.nanite = g.nanite.minus(nanC[2].cost);
+            buyOneCalc(nanC[2], g.nanite);
+         }
+         break;
+      case 3:
+         if (canBuy(nanC[3], g.nanite)) {
+            g.nanite = g.nanite.minus(nanC[3].cost);
+            buyOneCalc(nanC[3], g.nanite);
+         }
+         break;
+      case 4:
+         if (canBuy(nanC[4], g.nanite)) {
+            g.nanite = g.nanite.minus(nanC[4].cost);
+            buyOneCalc(nanC[4], g.nanite);
+         }
+         break;
+      case "t":
+         if (canBuy(g.tick, g.nanite)) {
+            g.nanite = g.nanite.minus(g.tick.cost);
+            g.tick.speed = g.tick.speed.minus(g.tick.speed.times(0.11));
+            g.tick.cost = g.tick.cost.times(g.tick.costMult);
+         }
+         break;
+		case "ns":
+			if (canBuy(g.nsphere, g.nanite)) {
+				g.nanite = g.nanite.minus(g.nsphere.cost);
+				g.nsphere.buyOne();
 			}
 			break;
-		case 1:
-			if (canBuy(nanite[1], nanite[0].amount)) {
-				nanite[0].amount = nanite[0].amount.minus(nanite[1].cost);
-				buyOneCalc(nanite[1], nanite[0].amount);
-			}
-			break;
-		case 2:
-			if (canBuy(nanite[2], nanite[1].amount)) {
-				nanite[1].amount = nanite[1].amount.minus(nanite[2].cost);
-				buyOneCalc(nanite[2], nanite[1].amount);
-			}
-			break;
-		case 3:
-			if (canBuy(nanite[3], nanite[2].amount)) {
-				nanite[2].amount = nanite[2].amount.minus(nanite[3].cost);
-				buyOneCalc(nanite[3], nanite[2].amount);
-			}
-			break;
-		case 4:
-			if (canBuy(nanite[4], nanite[3].amount)) {
-				nanite[3].amount = nanite[3].amount.minus(nanite[4].cost);
-				buyOneCalc(nanite[4], nanite[3].amount);
-			}
-			break;
-		case "t":
-			if (canBuy(game.tick, game.energy)) {
-			game.energy = game.energy.minus(game.tick.cost);
-			game.tick.speed = game.tick.speed.minus(game.tick.speed.times(0.11));
-			game.tick.cost = game.tick.cost.times(costMults[5]);
-			}
-			break;
-	}
+   }
 
 }
 
 
 function buyNextSingle(item, currency, index) {
-	if (currency.gte(item.cost.times(item.tillNext))) {
-		for (i in item.tillNext) {
-			buyOne(index);
-		}
-	}
+   if (currency.gte(item.cost.times(item.tillNext))) {
+      for (i in item.tillNext) {
+         buyOne(index);
+      }
+   }
 }
 
 
 function buyMaxCalc(item, currency, index) {
-	let total = currency.div(item.cost).floor();
-	for (i in total) {
-		buyOne(index);
-	}
+   let total = currency.div(item.cost).floor();
+   for (i in total) {
+      buyOne(index);
+   }
 }
 
 function buyMax(item) {
-	switch (item) {
-		//buyMaxCalc(buy, currency, index);
-		case 0:
-			buyMaxCalc(nanite[0], game.energy, 0);
+   switch (item) {
+      //buyMaxCalc(buy, currency, index);
+      case 0:
+         buyMaxCalc(nanC[0], g.nanite, 0);
+         break;
+      case 1:
+         buyNextSingle(nanC[1], g.nanite, 1);
+         break;
+      case 2:
+         buyNextSingle(nanC[2], g.nanite, 2);
+         break;
+      case 3:
+         buyNextSingle(nanC[3], g.nanite, 3);
+         break;
+      case 4:
+         buyNextSingle(nanC[4], g.nanite, 4);
+         break;
+      case "t":
+         buyMaxCalc(g.tick, g.nanite, "t");
+         break;
+		case "ns":
+			buyMaxCalc(g.nsphere, g.nanite, "ns");
 			break;
-		case 1:
-			buyNextSingle(nanite[1], nanite[0].amount, 1);
-			break;
-		case 2:
-			buyNextSingle(nanite[2], nanite[1].amount, 2);
-			break;
-		case 3:
-			buyNextSingle(nanite[3], nanite[2].amount, 3);
-			break;
-		case 4:
-			buyNextSingle(nanite[4], nanite[3].amount, 4);
-			break;
-		case "t":
-			buyMaxCalc(game.tick, game.energy, "t");
-			break;
-	}
+   }
 }
 
 function buyMaxAll() {
-	if (canBuy(game.tick, game.energy)) buyMaxCalc(game.tick, game.energy, "t");
-	if (canBuy(nanite[4], nanite[3].amount)) buyMaxCalc(nanite[4], nanite[3].amount, 4);
-	if (canBuy(nanite[3], nanite[2].amount)) buyMaxCalc(nanite[3], nanite[2].amount, 3);
-	if (canBuy(nanite[2], nanite[1].amount)) buyMaxCalc(nanite[2], nanite[1].amount, 2);
-	if (canBuy(nanite[1], nanite[0].amount)) buyMaxCalc(nanite[1], nanite[0].amount, 1);
-	if (canBuy(nanite[0], game.energy)) buyMaxCalc(nanite[0], game.energy, 0);
+	if (canBuy(g.nsphere, g.nanite)) buyMaxCalc(g.nsphere, g.nanite, "ns");
+   if (canBuy(g.tick, g.nanite)) buyMaxCalc(g.tick, g.nanite, "t");
+   if (canBuy(nanC[4], g.nanite)) buyMaxCalc(nanC[4], g.nanite, 4);
+   if (canBuy(nanC[3], g.nanite)) buyMaxCalc(nanC[3], g.nanite, 3);
+   if (canBuy(nanC[2], g.nanite)) buyMaxCalc(nanC[2], g.nanite, 2);
+   if (canBuy(nanC[1], g.nanite)) buyMaxCalc(nanC[1], g.nanite, 1);
+   if (canBuy(nanC[0], g.nanite)) buyMaxCalc(nanC[0], g.nanite, 0);
 }
 
 function updateDisplay() {
-	document.getElementById("energyA").innerHTML = `${format(game.energy)}`;
-	//document.getElementById("energyPerSec").innerHTML = `${prodPerSec(game.nano1)}`;
-	document.getElementById("tickspeed").innerHTML = `${format(game.tick.speed)}`;
-	document.getElementById("tB1").innerHTML = `Cost: ${format(game.tick.cost)} energy`;
-	document.getElementById("tBM").innerHTML = `Buy Max`;
-	document.getElementById("n0P").innerHTML = `x${format(nanite[0].pow)}`;
-	document.getElementById("n0A").innerHTML = `${format(nanite[0].amount)}`;
-	document.getElementById("n0B1").innerHTML = `Cost: ${format(nanite[0].cost)} energy`;
-	document.getElementById("n0BM").innerHTML = `Buy Max Nanites`;
-	document.getElementById("n1P").innerHTML = `x${format(nanite[1].pow)}`;
-	document.getElementById("n1A").innerHTML = `${format(nanite[1].amount)}`;
-	document.getElementById("n1B1").innerHTML = `Cost: ${format(nanite[1].cost)} nanites`;
-	document.getElementById("n1BM").innerHTML = `To Next: ${nanite[1].tillNext}, Cost: ${format(nanite[1].cost.times(nanite[1].tillNext))}`;
-	document.getElementById("n2P").innerHTML = `x${format(nanite[2].pow)}`;
-	document.getElementById("n2A").innerHTML = `${format(nanite[2].amount)}`;
-	document.getElementById("n2B1").innerHTML = `Cost: ${format(nanite[2].cost)} nanite creators`;
-	document.getElementById("n2BM").innerHTML = `To Next: ${nanite[2].tillNext}, Cost: ${format(nanite[2].cost.times(nanite[2].tillNext))}`;
-	document.getElementById("n3P").innerHTML = `x${format(nanite[3].pow)}`;
-	document.getElementById("n3A").innerHTML = `${format(nanite[3].amount)}`;
-	document.getElementById("n3B1").innerHTML = `Cost: ${format(nanite[3].cost)} naniteC^2s`;
-	document.getElementById("n3BM").innerHTML = `To Next: ${nanite[3].tillNext}, Cost: ${format(nanite[3].cost.times(nanite[3].tillNext))}`;
-	document.getElementById("n4P").innerHTML = `x${format(nanite[4].pow)}`;
-	document.getElementById("n4A").innerHTML = `${format(nanite[4].amount)}`;
-	document.getElementById("n4B1").innerHTML = `Cost: ${format(nanite[4].cost)} naniteC^3s`;
-	document.getElementById("n4BM").innerHTML = `To Next: ${nanite[4].tillNext}, Cost: ${format(nanite[4].cost.times(nanite[4].tillNext))}`;
-	if (!canBuy(nanite[0], game.energy)) {
-		document.getElementById("n0B1").classList.add("greyed");
-		document.getElementById("n0BM").classList.add("greyed");
+   let doc = (element) => document.getElementById(element);
+   let disp = (element, innerHTML) => doc(element).innerHTML = innerHTML;
+	let power = (powerItem) => powerItem.pow.times(g.nsphere.pow).times(g.nchip.pow);
+   disp("naniteA", `${format(g.nanite)}`);
+   disp("tickspeed", `${formatDecimals(g.tick.speed)}`);
+   disp("tB1", `Cost: ${format(g.tick.cost)} nanites`);
+   disp("tBM", `Buy Max`);
+   disp("n1P", `x${format(power(nanC[0]))}`);
+   disp("n1A", `${format(nanC[0].amount)}`);
+   disp("n1B1", `Cost: ${format(nanC[0].cost)} nanites`);
+   disp("n1BM", `To Next: ${nanC[0].tillNext}, Cost: ${format(nanC[0].cost.times(nanC[0].tillNext))}`);
+   disp("n2P", `x${format(power(nanC[1]))}`);
+   disp("n2A", `${format(nanC[1].amount)}`);
+   disp("n2B1", `Cost: ${format(nanC[1].cost)} nanites`);
+   disp("n2BM", `To Next: ${nanC[1].tillNext}, Cost: ${format(nanC[1].cost.times(nanC[1].tillNext))}`);
+   disp("n3P", `x${format(power(nanC[2]))}`);
+   disp("n3A", `${format(nanC[2].amount)}`);
+   disp("n3B1", `Cost: ${format(nanC[2].cost)} nanites`);
+   disp("n3BM", `To Next: ${nanC[2].tillNext}, Cost: ${format(nanC[2].cost.times(nanC[2].tillNext))}`);
+   disp("n4P", `x${format(power(nanC[3]))}`);
+   disp("n4A", `${format(nanC[3].amount)}`);
+   disp("n4B1", `Cost: ${format(nanC[3].cost)} nanites`);
+   disp("n4BM", `To Next: ${nanC[3].tillNext}, Cost: ${format(nanC[3].cost.times(nanC[3].tillNext))}`);
+	disp("n5P", `x${format(power(nanC[4]))}`);
+   disp("n5A", `${format(nanC[4].amount)}`);
+   disp("n5B1", `Cost: ${format(nanC[4].cost)} nanites`);
+   disp("n5BM", `To Next: ${nanC[4].tillNext}, Cost: ${format(nanC[4].cost.times(nanC[4].tillNext))}`);
+
+	if (g.nsphere.upgrades.lt(1)) disp("nsphereBtn", `<b>Create a NanoSphere<br>Cost: ${format(g.nsphere.cost)} nanites</b>`);
+	if (g.nsphere.upgrades.gte(1)) disp("nsphereBtn", `<b>Upgrade NanoSphere<br>Cost: ${format(g.nsphere.cost)} nanites</b><br>Current: x${format(g.nsphere.pow)}`);
+
+	disp("nchipBtn", `<b>Condense NanoSpheres<br>Boost: ${g.nsphere.pow.div(10)}</b><br>Current: ${g.nchip.pow}`);
+
+	if (!canChip()) {
+		doc("nchipBtn").classList.add("greyed");
 	} else {
-		document.getElementById("n0B1").classList.remove("greyed");
-		document.getElementById("n0BM").classList.remove("greyed");
+		doc("nchipBtn").classList.remove("greyed");
 	}
-	if (!canBuy(nanite[1], nanite[0].amount)) {
-		document.getElementById("n1B1").classList.add("greyed");
+	if (!canBuy(g.nsphere, g.nanite)) {
+		doc("nsphereBtn").classList.add("greyed");
 	} else {
-		document.getElementById("n1B1").classList.remove("greyed");
+		doc("nsphereBtn").classList.remove("greyed");
 	}
-	if (!canBuyTillNext(nanite[1], nanite[0].amount)) {
-		document.getElementById("n1BM").classList.add("greyed");
-	} else {
-		document.getElementById("n1BM").classList.remove("greyed");
-	}
-	if (!canBuy(nanite[2], nanite[1].amount)) {
-		document.getElementById("n2B1").classList.add("greyed");
-	} else {
-		document.getElementById("n2B1").classList.remove("greyed");
-	}
-	if (!canBuyTillNext(nanite[2], nanite[1].amount)) {
-		document.getElementById("n2BM").classList.add("greyed");
-	} else {
-		document.getElementById("n2BM").classList.remove("greyed");
-	}
-	if (!canBuy(nanite[3], nanite[2].amount)) {
-		document.getElementById("n3B1").classList.add("greyed");
-	} else {
-		document.getElementById("n3B1").classList.remove("greyed");
-	}
-	if (!canBuyTillNext(nanite[3], nanite[2].amount)) {
-		document.getElementById("n3BM").classList.add("greyed");
-	} else {
-		document.getElementById("n3BM").classList.remove("greyed");
-	}
-	if (!canBuy(nanite[4], nanite[3].amount)) {
-		document.getElementById("n4B1").classList.add("greyed");
-	} else {
-		document.getElementById("n4B1").classList.remove("greyed");
-	}
-	if (!canBuyTillNext(nanite[4], nanite[3].amount)) {
-		document.getElementById("n4BM").classList.add("greyed");
-	} else {
-		document.getElementById("n4BM").classList.remove("greyed");
-	}
-	if (!canBuy(game.tick, game.energy)) {
-		document.getElementById("tB1").classList.add("greyed");
-	} else {
-		document.getElementById("tB1").classList.remove("greyed");
-	}
+   if (!canBuy(nanC[0], g.nanite)) {
+      doc("n1B1").classList.add("greyed");
+   } else {
+      doc("n1B1").classList.remove("greyed");
+   }
+   if (!canBuyTillNext(nanC[0], g.nanite)) {
+      doc("n1BM").classList.add("greyed");
+   } else {
+      doc("n1BM").classList.remove("greyed");
+   }
+   if (!canBuy(nanC[1], g.nanite)) {
+      doc("n2B1").classList.add("greyed");
+   } else {
+      doc("n2B1").classList.remove("greyed");
+   }
+   if (!canBuyTillNext(nanC[1], g.nanite)) {
+      doc("n2BM").classList.add("greyed");
+   } else {
+      doc("n2BM").classList.remove("greyed");
+   }
+   if (!canBuy(nanC[2], g.nanite)) {
+      doc("n3B1").classList.add("greyed");
+   } else {
+      doc("n3B1").classList.remove("greyed");
+   }
+   if (!canBuyTillNext(nanC[2], g.nanite)) {
+      doc("n3BM").classList.add("greyed");
+   } else {
+      doc("n3BM").classList.remove("greyed");
+   }
+   if (!canBuy(nanC[3], g.nanite)) {
+      doc("n4B1").classList.add("greyed");
+   } else {
+      doc("n4B1").classList.remove("greyed");
+   }
+   if (!canBuyTillNext(nanC[3], g.nanite)) {
+      doc("n4BM").classList.add("greyed");
+   } else {
+      doc("n4BM").classList.remove("greyed");
+   }
+   if (!canBuy(nanC[4], g.nanite)) {
+   	doc("n4B1").classList.add("greyed");
+   } else {
+   	doc("n4B1").classList.remove("greyed");
+   }
+   if (!canBuyTillNext(nanC[4], g.nanite)) {
+   	doc("n4BM").classList.add("greyed");
+   } else {
+   	doc("n4BM").classList.remove("greyed");
+   }
+   if (!canBuy(g.tick, g.nanite)) {
+      doc("tB1").classList.add("greyed");
+   } else {
+      doc("tB1").classList.remove("greyed");
+   }
 }
 
 function updateAmounts() {
-	game.energy = game.energy.plus(prodPerSec(nanite[0]));
-	nanite[0].amount = nanite[0].amount.plus(prodPerSec(nanite[1]));
-	nanite[1].amount = nanite[1].amount.plus(prodPerSec(nanite[2]));
-	nanite[2].amount = nanite[2].amount.plus(prodPerSec(nanite[3]));
-	nanite[3].amount = nanite[3].amount.plus(prodPerSec(nanite[4]));
+   g.nanite = g.nanite.plus(prodPerSec(nanC[0]));
+   nanC[0].amount = nanC[0].amount.plus(prodPerSec(nanC[1]));
+   nanC[1].amount = nanC[1].amount.plus(prodPerSec(nanC[2]));
+   nanC[2].amount = nanC[2].amount.plus(prodPerSec(nanC[3]));
+   nanC[3].amount = nanC[3].amount.plus(prodPerSec(nanC[4]));
 }
 
+nanC[0].availtrue();
 function updateMilestones() {
-	if (nanite[0].amount.gte(1) || nanite[1].amount.gte(1)) {
-		document.getElementById("energyRow").classList.remove("unav");
-		document.getElementById("n1Row").classList.remove("unav");
+	let doc = (element) => document.getElementById(element);
+	let clAdd = (element,cl) => doc(element).classList.add(cl);
+	let clRem = (element,cl) => doc(element).classList.remove(cl);
+
+   if (nanC[0].amount.gte(1)) {
+		clRem("naniteRow", "unav");
+		clAdd("naniteRow", "fade");
+   } else {
+		clAdd("naniteRow", "unav");
+		clRem("naniteRow", "fade");
+   }
+   if (g.nsphere.upgrades.gte(1)) {
+		nanC[1].availtrue();
+		clRem("tickRow", "unav");
+		clRem("n2Row", "unav");
+		clAdd("tickRow", "fade");
+		clAdd("n2Row", "fade");
+   } else {
+		clAdd("tickRow", "unav");
+		clAdd("n2Row", "unav");
+		clRem("tickRow", "fade");
+		clRem("n2Row", "fade");
+   }
+   if (g.nsphere.upgrades.gte(2)) {
+		nanC[2].availtrue();
+      clRem("n3Row", "unav");
+		clAdd("n3Row", "fade");
+   } else {
+      clAdd("n3Row", "unav");
+		clAdd("n3Row", "fade");
+   }
+   if (g.nsphere.upgrades.gte(3)) {
+		nanC[3].availtrue();
+		clRem("n4Row", "unav");
+		clAdd("n4Row", "fade");
+   } else {
+		clAdd("n4Row", "unav");
+		clAdd("n4Row", "fade");
+   }
+	if (g.nsphere.upgrades.gte(4)) {
+		nanC[4].availtrue();
+		clRem("n5Row", "unav");
+		clAdd("n5Row", "fade");
+   } else {
+		clAdd("n5Row", "unav");
+		clAdd("n5Row", "fade");
+   }
+	if (g.nsphere.pow.gte(16)) {
+		clRem("nchipBtn", "unav");
+		clAdd("nchipBtn", "fade");
 	} else {
-		document.getElementById("energyRow").classList.add("unav");
-		document.getElementById("n1Row").classList.add("unav");
-	}
-	if (nanite[1].amount.gte(1) || nanite[2].amount.gte(1)) {
-		document.getElementById("tickRow").classList.remove("unav");
-		document.getElementById("n2Row").classList.remove("unav");
-	} else {
-		document.getElementById("tickRow").classList.add("unav");
-		document.getElementById("n2Row").classList.add("unav");
-	}
-	if (nanite[2].amount.gte(1) || nanite[3].amount.gte(1)) {
-		document.getElementById("n3Row").classList.remove("unav");
-	} else {
-		document.getElementById("n3Row").classList.add("unav");
-	}
-	if (nanite[3].amount.gte(1) || nanite[4].amount.gte(1)) {
-		document.getElementById("n4Row").classList.remove("unav");
-	} else {
-		document.getElementById("n4Row").classList.add("unav");
+		clAdd("nchipBtn", "unav");
+		clRem("nchipBtn", "fade");
 	}
 }
 
 let requestLoop,
-startTime = Date.now(),
-fps,
-now,
-then,
-elapsed;
+   startTime = Date.now(),
+   fps,
+   now,
+   then,
+   elapsed;
+
 function gameLoop() {
-	fps = 1000 / updateRate;
-	then = Date.now();
-	startTime = then;
-	gameTick();
+   fps = 1000 / updateRate;
+   then = Date.now();
+   startTime = then;
+   gameTick();
 }
 
 function gameTick() {
-	requestAnimationFrame(gameTick);
+   requestAnimationFrame(gameTick);
 
-	now = Date.now();
-	elapsed = now - then;
+   now = Date.now();
+   elapsed = now - then;
 
-	if (elapsed > fps) {
-		then = now - (elapsed % fps);
+   if (elapsed > fps) {
+      then = now - (elapsed % fps);
 
-		updateAmounts();
-		updateMilestones();
-		updateDisplay();
-	}
+      updateAmounts();
+      updateMilestones();
+      updateDisplay();
+   }
 
 }
 
@@ -301,23 +419,25 @@ window.addEventListener("load", updateDisplay);
 
 document.getElementById("tB1").addEventListener("click", () => buyOne("t"));
 document.getElementById("tBM").addEventListener("click", () => buyMax("t"));
-document.getElementById("n0B1").addEventListener("click", () => buyOne(0));
-document.getElementById("n0BM").addEventListener("click", () => buyMax(0));
-document.getElementById("n1B1").addEventListener("click", () => buyOne(1));
-document.getElementById("n1BM").addEventListener("click", () => buyMax(1));
-document.getElementById("n2B1").addEventListener("click", () => buyOne(2));
-document.getElementById("n2BM").addEventListener("click", () => buyMax(2));
-document.getElementById("n3B1").addEventListener("click", () => buyOne(3));
-document.getElementById("n3BM").addEventListener("click", () => buyMax(3));
-document.getElementById("n4B1").addEventListener("click", () => buyOne(4));
-document.getElementById("n4BM").addEventListener("click", () => buyMax(4));
+document.getElementById("n1B1").addEventListener("click", () => buyOne(0));
+document.getElementById("n1BM").addEventListener("click", () => buyMax(0));
+document.getElementById("n2B1").addEventListener("click", () => buyOne(1));
+document.getElementById("n2BM").addEventListener("click", () => buyMax(1));
+document.getElementById("n3B1").addEventListener("click", () => buyOne(2));
+document.getElementById("n3BM").addEventListener("click", () => buyMax(2));
+document.getElementById("n4B1").addEventListener("click", () => buyOne(3));
+document.getElementById("n4BM").addEventListener("click", () => buyMax(3));
+//document.getElementById("n5B1").addEventListener("click", () => buyOne(4));
+//document.getElementById("n5BM").addEventListener("click", () => buyMax(4));
 document.getElementById("maxBuy").addEventListener("click", () => buyMaxAll());
+document.getElementById("nsphereBtn").addEventListener("click", () => {buyOne("ns"); if (g.nsphere.created == false) g.nsphere.created = true;});
+document.getElementById("nchipBtn").addEventListener("click", () => boostChip());
 
 window.addEventListener("keydown", (event) => {
-	switch (event.keyCode) {
-		case 77: //M
-			document.getElementById("maxBuy").click();
-			break;
+   switch (event.keyCode) {
+      case 77: //M
+         document.getElementById("maxBuy").click();
+         break;
 
-	}
+   }
 });

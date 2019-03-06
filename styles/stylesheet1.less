@@ -40,9 +40,14 @@ h2 {
 #home-page {
 	height: 100vh;
 	width: 100vw;
-	animation: fade-in 1s ease both;
-	-webkit-animation: fade-in 1s ease both;
+	animation: fade-in 500ms ease both;
+	-webkit-animation: fade-in 500ms ease both;
 }
+
+.fade {
+	animation: fade-in 250ms ease both;
+}
+
 
 @keyframes fade-in {
 	0% {
@@ -78,7 +83,7 @@ td {
 	grid-area: top;
 }
 
-#energy {
+#nanite {
 	width: 100%;
 	padding: 1em;
 }
@@ -92,12 +97,30 @@ td {
 	text-align: center;
 }
 
+#nboosts {
+	width: 100%;
+}
+
+#nboostsRow {
+	text-align: center;
+}
+
+#nsphereBtn {
+	height: 4em;
+	width: 12em;
+}
+
+#nchipBtn {
+	height: 4em;
+	width: 12em;
+}
+
 #max {
 	width: 100%;
 	text-align: center;
 }
 
-#nano-container {
+#nanC-container {
 	grid-area: middle;
 }
 
@@ -141,13 +164,9 @@ td {
 		flex-wrap: wrap;
 	}
 
-	#energy-container {
+	#top-container {
 		width: 100vw;
 		height: 20vh;
-	}
-	#perSec-container {
-		width: 100vw;
-		height: 10vh;
 	}
 	#game-container {
 		width: 100vw;
@@ -179,4 +198,10 @@ td {
 		background-color: red;
 		color: white;
 	}
+}
+
+#speedNote {
+	position: absolute;
+	bottom: 0;
+	right: 0;
 }
