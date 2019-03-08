@@ -34,12 +34,12 @@ function Researcher(c, a, b, p) {
 	};
 }
 
-function NanoSphere() {
-	this.upgrades = new Decimal(0);
-	this.pow = new Decimal(1);
-	this.mult = new Decimal(2);
-	this.cost = new Decimal(1e2);
-	this.costMult = new Decimal(1e3);
+function NanoSphere(u,p,m,c,cm) {
+	this.upgrades = new Decimal(u);
+	this.pow = new Decimal(p);
+	this.mult = new Decimal(m);
+	this.cost = new Decimal(c);
+	this.costMult = new Decimal(cm);
 
 
 
