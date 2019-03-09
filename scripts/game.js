@@ -12,7 +12,7 @@ let game = {
       speed: new Decimal(1e3),
       cost: new Decimal(1e3),
       decrement: new Decimal(0.89),
-		costMult: new Decimal(1e1)
+      costMult: new Decimal(1e1)
    },
    nsphere: new NanoSphere(0,1,2,1e2,1e3),
    nchip: new NanoChip(1),
@@ -72,12 +72,17 @@ function canChip() {
 
 function boostChip() {
 	if (canChip()) {
-		game.nchip.boost(game.nsphere.pow.div(10));
-		game.nanite = new Decimal(10);
-	   game.tick.speed = new Decimal(1e1);
+	   game.nchip.boost(game.nsphere.pow.div(10));
+	   game.nanite = new Decimal(10);
+	   game.tick.speed = new Decimal(1e3);
 	   game.tick.cost = new Decimal(1e3);
+<<<<<<< HEAD
 	   game.tick.decrement = new Decimal(0.9);
 		game.tick.costMult = new Decimal(1e1);
+=======
+	   game.tick.decrement = new Decimal(0.89);
+	   game.tick.costMult = new Decimal(1e1);
+>>>>>>> 2fe7ab529f644e19c8d35cc5ecc32184fae0053c
 	   game.nsphere = new NanoSphere(0,1,2,1e2,1e3);
 	   game.researcher = new Researcher(1e4, 0, 0, 1);
 	   game.researchPoints = new Decimal(0);
