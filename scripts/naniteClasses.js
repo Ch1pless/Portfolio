@@ -45,9 +45,8 @@ function NanoSphere(u,p,m,c,cm) {
 
 	this.buyOne = function () {
 		this.upgrades = this.upgrades.plus(1);
-		this.costMult = this.costMult.times(1e1);
 		this.pow = this.pow.times(this.mult);
-		this.cost = this.cost.times(this.costMult);
+		this.cost = this.cost.times(Math.pow(1.10,this.upgrades));
 	}
 }
 

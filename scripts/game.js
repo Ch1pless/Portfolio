@@ -78,7 +78,7 @@ function boostChip() {
 	   game.tick.cost = new Decimal(1e3);
 	   game.tick.decrement = new Decimal(0.9);
 		game.tick.costMult = new Decimal(1e1);
-	   game.nsphere = new NanoSphere();
+	   game.nsphere = new NanoSphere(0,1,2,1e2,1e3);
 	   game.researcher = new Researcher(1e4, 0, 0, 1);
 	   game.researchPoints = new Decimal(0);
 		game.nanC[0] = new NaniteCreator(1e1,0,0,1);
@@ -421,8 +421,8 @@ document.getElementById("n3B1").addEventListener("click", () => buyOne(2));
 document.getElementById("n3BM").addEventListener("click", () => buyMax(2));
 document.getElementById("n4B1").addEventListener("click", () => buyOne(3));
 document.getElementById("n4BM").addEventListener("click", () => buyMax(3));
-//document.getElementById("n5B1").addEventListener("click", () => buyOne(4));
-//document.getElementById("n5BM").addEventListener("click", () => buyMax(4));
+document.getElementById("n5B1").addEventListener("click", () => buyOne(4));
+document.getElementById("n5BM").addEventListener("click", () => buyMax(4));
 document.getElementById("maxBuy").addEventListener("click", () => buyMaxAll());
 document.getElementById("nsphereBtn").addEventListener("click", () => {buyOne("ns"); if (game.nsphere.created == false) game.nsphere.created = true;});
 document.getElementById("nchipBtn").addEventListener("click", () => boostChip());
@@ -469,3 +469,15 @@ function resetHard() {
 
 window.addEventListener("load", loadGame);
 window.setInterval(saveGame, 200);
+
+let awayBegin;
+//window.addEventListener("onpagehide", () => awayBegin = Date.now());
+function offlineProgress(start) {
+	let timeGap = Date.now() - start;
+	let loopNumber = timeGap/(1000/updateRate);
+	for (i in loopNumber) {
+		updateAmounts();
+	}
+}
+
+//window.addEventListener("onpageshow", offlineProgress(awayBegin);
