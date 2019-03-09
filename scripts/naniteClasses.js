@@ -23,37 +23,61 @@ function NaniteCreator(c, a, b, p) {
 
 function Researcher(c, a, b, p) {
 	this.cost = new Decimal(c);
-	this.costMult = new Decimal(1e5);
+	this.costMult = new Decimal(1e10);
 	this.amount = new Decimal(a);
 	this.bought = new Decimal(b);
 	this.pow = new Decimal(p);
+	this.available = false;
 
 	this.buyOne = function () {
 		this.amount = this.amount.plus(1);
 		this.bought = this.bought.plus(1);
+		this.cost = this.cost.times(this.costMult);
 	};
-}
 
-function NanoSphere(u,p,m,c,cm) {
-	this.upgrades = new Decimal(u);
-	this.pow = new Decimal(p);
-	this.mult = new Decimal(m);
-	this.cost = new Decimal(c);
-	this.costMult = new Decimal(cm);
+	this.availtrue = function () {
+		this.available = true;
+	}
 
-
-
-	this.buyOne = function () {
-		this.upgrades = this.upgrades.plus(1);
-		this.pow = this.pow.times(this.mult);
-		this.cost = this.cost.times(Math.pow(1.10,this.upgrades));
+	this.availfalse = function () {
+		this.available = false;
 	}
 }
 
-function NanoChip(pow = 1) {
+function NanoSphere(u,p,c,cm) {
+	this.upgrades = new Decimal(u);
+	this.pow = new Decimal(p);
+	this.cost = new Decimal(c);
+	this.costMult = new Decimal(cm);
+	this.available = false;
+
+	this.buyOne = function () {
+		if (this.upgrades != 0) {
+			if (this.pow.gte(16)) {
+				this.pow = this.pow.times((1/Math.pow(1.10, this.upgrades))+1);
+			} else {
+				this.pow = this.pow.times(2);
+			}
+
+		}
+		this.upgrades = this.upgrades.plus(1);
+		this.cost = this.cost.times(this.costMult.plus(Math.pow(1e2, this.upgrades)));
+	}
+
+	this.availtrue = function () {
+		this.available = true;
+	}
+
+	this.availfalse = function () {
+		this.available = false;
+	}
+}
+
+function ConNanoSphere(pow = 1) {
 	this.pow = new Decimal(pow);
 
 	this.boost = function (boost) {
-		this.pow = this.pow.plus(boost.minus(1));
+		let powBoost = boost.minus(1);
+		this.pow = this.pow.plus(powBoost);
 	}
 }

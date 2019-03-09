@@ -62,16 +62,11 @@ h2 {
 }
 
 #game-container {
-	display: grid;
+	display: flex;
 	height: 100%;
 	width: 100%;
 	box-sizing: content-box;
-	grid-template-columns: 1fr 1fr 1fr;
-	grid-template-rows: 1fr 1fr 1fr;
-	grid-template-areas:
-	"top-left top top-right"
-	"middle middle middle"
-	"bottom-left bottom bottom-right"
+	flex-direction: column;
 }
 
 td {
@@ -81,6 +76,19 @@ td {
 
 #top-container {
 	grid-area: top;
+}
+
+#hor-flex {
+	display: flex;
+	flex-direction: row;
+	flex-grow: 3 4 3;
+}
+#topright,
+#topleft {
+	flex-basis: 30%;
+}
+#top {
+	flex-basis: 40%;
 }
 
 #nanite {
@@ -120,8 +128,43 @@ td {
 	text-align: center;
 }
 
+#menubar {
+	//grid-area: menu;
+	text-align: center;
+}
+
+#nan-container {
+	//grid-area: bottom;
+	width: 100%;
+}
+
+#nandepbar {
+	text-align: center;
+}
+
 #nanC-container {
-	grid-area: middle;
+	width: 100%;
+}
+
+#nCs,
+#nanRs {
+	width: 100%;
+}
+
+#nanS-container {
+	grid-area: bottom;
+}
+
+#mods {
+	width: 100%;
+}
+
+#stats-container {
+	grid-area: bottom;
+}
+
+#settings-container {
+	grid-area: bottom;
 }
 
 .tcolumn {
@@ -156,32 +199,50 @@ td {
 	}
 }
 
-@media (max-width: 400px) {
+.gameBtn1 {
+	box-sizing: content-box;
+	overflow: visible;
+	border-radius: 0;
+	border: 1px green solid;
+	padding: 2px 5px;
+	height: 1.1em;
+	width: 12em;
+	background-color: rgb(230,230,230);
 
-	#game-container {
-		display: flex;
-		flex-direction: rows;
-		flex-wrap: wrap;
+	&:hover {
+		background-color: green;
+		color: white;
 	}
+}
 
-	#top-container {
-		width: 100vw;
-		height: 20vh;
+.gameBtnM {
+	box-sizing: content-box;
+	overflow: visible;
+	border-radius: 0;
+	border: 1px green solid;
+	padding: 2px 5px;
+	height: 1.1em;
+	width: 15em;
+	background-color: rgb(230,230,230);
+
+	&:hover {
+		background-color: green;
+		color: white;
 	}
-	#game-container {
-		width: 100vw;
-	}
-	.tcolumn {
-	width: 50vw;
-	}
-	.acolumn {
-	width: 50vw;
-	}
-	.b1column {
-	width: 50vw;
-	}
-	.b2column {
-	width: 50vw;
+}
+
+.menuBtn {
+	box-sizing: content-box;
+	overflow: visible;
+	border-radius: 0;
+	border: 2px rgb(75,100,225) solid;
+	height: 1.5em;
+	width: 10em;
+	font-size: 1.1em;
+
+	&:hover {
+		background-color: rgb(75,100,225);
+		color: white;
 	}
 }
 
@@ -204,4 +265,33 @@ td {
 	position: absolute;
 	bottom: 0;
 	right: 0;
+}
+
+.currentPage {
+	display: table;
+}
+
+.showDisplay {
+	display: block;
+}
+
+.noDisplay {
+	display: none;
+}
+
+.modGet {
+	background-color: green;
+	border: 2px grey solid;
+	pointer-events: none;
+}
+
+#testBox {
+	top: calc(75vh - 15em);
+	left: calc(50vw - 25em);
+	position: absolute;
+	width: 50em;
+	height: 25em;
+	background-color: rgb(220,220,220);
+	color: black;
+	border: 3px orange solid;
 }
