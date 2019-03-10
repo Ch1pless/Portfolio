@@ -14,7 +14,7 @@ let game = {
    nanite: new Decimal(10),
 	nanC: [new NaniteCreator(1e1,0,0,1),new NaniteCreator(1e2,0,0,1),new NaniteCreator(1e8,0,0,1),new NaniteCreator(1e14,0,0,1),new NaniteCreator(1e20,0,0,1)],
    tick: {
-      speed: new Decimal(1e1),
+      speed: new Decimal(1e3),
       cost: new Decimal(1e3),
       decrement: new Decimal(0.89),
       costMult: new Decimal(1e1)
@@ -76,7 +76,7 @@ function condense() {
 				new NaniteCreator(1e8,0,0,1),new NaniteCreator(1e14,0,0,1),
 				new NaniteCreator(1e20,0,0,1)],
 		   tick: {
-		      speed: new Decimal(1e1),
+		      speed: new Decimal(1e3),
 		      cost: new Decimal(1e3),
 		      decrement: new Decimal(0.89),
 		      costMult: new Decimal(1e1)
@@ -102,7 +102,7 @@ function toChip() {
 			new NaniteCreator(1e8,0,0,1),new NaniteCreator(1e14,0,0,1),
 			new NaniteCreator(1e20,0,0,1)],
 	   tick: {
-	      speed: new Decimal(1e1),
+	      speed: new Decimal(1e3),
 	      cost: new Decimal(1e3),
 	      decrement: new Decimal(0.89),
 	      costMult: new Decimal(1e1)
@@ -290,7 +290,7 @@ document.getElementById(mods[0]).addEventListener("click", () => buyMod(0));
 function buyMod(index) {
 	switch (index) {
 		case 0:
-			game.nchip.minus(1);
+			game.nchip = game.nchip.minus(1);
 			game.researcher.availtrue();
 			break;
 	}
@@ -434,16 +434,10 @@ window.addEventListener("load", updateDisplay);
 
 document.getElementById("tB1").addEventListener("click", () => buyOne("t"));
 document.getElementById("tBM").addEventListener("click", () => buyMax("t"));
-document.getElementById("n1B1").addEventListener("click", () => buyOne(0));
-document.getElementById("n1BM").addEventListener("click", () => buyMax(0));
-document.getElementById("n2B1").addEventListener("click", () => buyOne(1));
-document.getElementById("n2BM").addEventListener("click", () => buyMax(1));
-document.getElementById("n3B1").addEventListener("click", () => buyOne(2));
-document.getElementById("n3BM").addEventListener("click", () => buyMax(2));
-document.getElementById("n4B1").addEventListener("click", () => buyOne(3));
-document.getElementById("n4BM").addEventListener("click", () => buyMax(3));
-document.getElementById("n5B1").addEventListener("click", () => buyOne(4));
-document.getElementById("n5BM").addEventListener("click", () => buyMax(4));
+for (let i = 0; i < game.nanC.length-1; i++) {
+	document.getElementById("n"+(i+1)+"B1").addEventListener("click", () => buyOne(i));
+	document.getElementById("n"+(i+1)+"BM").addEventListener("click", () => buyMax(i));
+}
 document.getElementById("maxBuy").addEventListener("click", () => buyMaxAll());
 document.getElementById("nsphereBtn").addEventListener("click", () => {buyOne("ns"); if (game.nsphere.created == false) game.nsphere.created = true;});
 document.getElementById("cnsphereBtn").addEventListener("click", () => condense());
@@ -468,9 +462,6 @@ function loadGame() {
 	let lastTime = JSON.parse(localStorage.getItem("lastTime"));
 	let newTime = Date.now();
 	let elapsed = newTime - lastTime;
-	for (let i = 0; i<Math.floor(elapsed/fps); i++) {
-		updateAmounts();
-	}
 
 	let savegame = JSON.parse(localStorage.getItem("save"));
 	game.nanite = new Decimal(savegame.nanite);
