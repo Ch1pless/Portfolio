@@ -2,20 +2,17 @@
 
 let nanBtn = document.getElementById("nanPage"),
 nanSBtn = document.getElementById("nanSPage"),
-statsBtn = document.getElementById("statsPage"),
 settingsBtn = document.getElementById("settingsPage"),
-pageBtns = [nanBtn, nanSBtn, statsBtn, settingsBtn];
+pageBtns = [nanBtn, nanSBtn, settingsBtn];
 
 let nanCont = document.getElementById("nan-container"),
 nanSCont = document.getElementById("nanS-container"),
-statsCont = document.getElementById("stats-container"),
 settingsCont = document.getElementById("settings-container"),
-pages = [nanCont, nanSCont, statsCont, settingsCont];
+pages = [nanCont, nanSCont, settingsCont];
 
 nanBtn.addEventListener("click", () => page(0));
 nanSBtn.addEventListener("click", () => page(1));
-statsBtn.addEventListener("click", () => page(2));
-settingsBtn.addEventListener("click", () => page(3));
+settingsBtn.addEventListener("click", () => page(2));
 
 function page(index) {
 	for(let i = 0; i < pages.length; i++) {

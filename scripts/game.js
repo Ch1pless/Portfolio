@@ -10,6 +10,8 @@ try {
 
 let updateRate = 50;
 let costMults = [1e3, 1e5, 1e7, 1e10, 1e13];
+let perfection = false,
+perfectionCost = new Decimal(1e4);
 let game = {
    nanite: new Decimal(10),
 	nanC: [new NaniteCreator(1e1,0,0,1),new NaniteCreator(1e2,0,0,1),new NaniteCreator(1e8,0,0,1),new NaniteCreator(1e14,0,0,1),new NaniteCreator(1e20,0,0,1)],
@@ -87,7 +89,6 @@ function condense() {
 		   researcher: game.researcher,
 		   research: game.research,
 		   mods: [],
-		   achievements: [],
 			resets: game.resets
 		}
 		game.nanC[0].availtrue();
@@ -113,8 +114,7 @@ function toChip() {
 	   researcher: new Researcher(1e10, 0, 0, 1),
 	   research: new Decimal(0),
 	   mods: [],
-	   achievements: [],
-		resets: game.resets.plus(1)
+	   resets: game.resets.plus(1)
 	}
 	game.nanC[0].availtrue();
 }
@@ -163,6 +163,11 @@ function buyOne(item) {
 		case "r":
 			if (canBuy(game.researcher)) {
 				game.researcher.buyOne();
+			}
+			break;
+		case "p":
+			if (game.research.gte(perfectionCost)) {
+				perfection = true;
 			}
    }
 
@@ -232,6 +237,7 @@ function updateDisplay() {
    disp("tBM", `Buy Max`);
 	disp("cnsphereBtn", `<b>Condense NanoSpheres<br>Boost: +${formatDecimals(game.nsphere.pow.div(10).minus(1))}</b><br>Current: ${formatDecimals(game.cnsphere.pow)}`);
 	disp("nchipBtn", `<b>Collapse NanoSphere into ${format(game.cnsphere.pow.div(100).floor())} Nanochip</b>`);
+	disp("rA", `Current Research: ${format(game.research)}`);
 	if (game.researcher.amount.equals(1)) disp("nresearcherA", `Researcher: ${format(game.researcher.amount)}`);
 	else disp("nresearcherA", `Researchers: ${format(game.researcher.amount)}`);
 	for (let i = 0; i < game.nanC.length; i++) {
@@ -277,6 +283,11 @@ function updateDisplay() {
    } else {
       doc("tB1").classList.remove("greyed");
    }
+	if (!game.research.gte(perfectionCost)) {
+		doc("perfectBtn").classList.add("greyed");
+	} else {
+		doc("perfectBtn").classList.remove("greyed");
+	}
 }
 
 let mods = [];
@@ -304,6 +315,7 @@ function updateAmounts() {
 	for (let i = 0; i < game.nanC.length-1; i++) {
 		game.nanC[i].amount = game.nanC[i].amount.plus(prodPerSec(game.nanC[i+1]));
 	}
+	game.research = game.research.plus(prodPerSec(game.researcher));
 }
 
 function updateMilestones() {
@@ -397,6 +409,11 @@ function updateMilestones() {
 		clRem("nandepbar", "fade");
 		clRem("ns-mod1", "modGet");
 	}
+	if (perfection) {
+		document.getElementById("winBox").classList.remove("noDisplay");
+	} else {
+		document.getElementById("winBox").classList.add("noDisplay");
+	}
 }
 
 let requestLoop,
@@ -434,15 +451,17 @@ window.addEventListener("load", updateDisplay);
 
 document.getElementById("tB1").addEventListener("click", () => buyOne("t"));
 document.getElementById("tBM").addEventListener("click", () => buyMax("t"));
-for (let i = 0; i < game.nanC.length-1; i++) {
+for (let i = 0; i < game.nanC.length; i++) {
 	document.getElementById("n"+(i+1)+"B1").addEventListener("click", () => buyOne(i));
 	document.getElementById("n"+(i+1)+"BM").addEventListener("click", () => buyMax(i));
+	console.log("n"+(i+1)+" and an index of " + (i));
 }
 document.getElementById("maxBuy").addEventListener("click", () => buyMaxAll());
 document.getElementById("nsphereBtn").addEventListener("click", () => {buyOne("ns"); if (game.nsphere.created == false) game.nsphere.created = true;});
 document.getElementById("cnsphereBtn").addEventListener("click", () => condense());
 document.getElementById("nchipBtn").addEventListener("click", () => toChip());
 document.getElementById("nRB1").addEventListener("click", () => buyOne("r"));
+document.getElementById("perfectBtn").addEventListener("click", () => buyOne("p"));
 window.addEventListener("keydown", (event) => {
    switch (event.keyCode) {
       case 77: //M
@@ -481,7 +500,6 @@ function loadGame() {
 	game.researcher.available = savegame.researcher.available;
    game.research = new Decimal(savegame.research);
    game.mods = savegame.mods;
-   game.achievements = savegame.achievements;
 	game.resets = new Decimal(savegame.resets);
 	updateMilestones();
 	updateDisplay();
@@ -494,15 +512,3 @@ function resetHard() {
 
 window.addEventListener("load", loadGame);
 window.setInterval(saveGame, 2000);
-
-let awayBegin;
-//window.addEventListener("onpagehide", () => awayBegin = Date.now());
-function offlineProgress(start) {
-	let timeGap = Date.now() - start;
-	let loopNumber = timeGap/(1000/updateRate);
-	for (i in loopNumber) {
-		updateAmounts();
-	}
-}
-
-//window.addEventListener("onpageshow", offlineProgress(awayBegin);

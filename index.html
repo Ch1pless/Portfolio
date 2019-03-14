@@ -56,7 +56,6 @@
 				<div id="menubar">
 					<button class="menuBtn" id="nanPage">Nanites</button>
 					<button class="menuBtn" id="nanSPage">NanoSphere</button>
-					<button class="menuBtn" id="statsPage">Statistics</button>
 					<button class="menuBtn" id="settingsPage">Settings</button>
 				</div>
 				<div id="nan-container">
@@ -119,8 +118,15 @@
 						</table>
 						<table id="nRs">
 							<tr id="nRRow">
+								<td>Research Required to Perfect NanoChip: 10,000</td>
 								<td id="nresearcherA"></td>
+							</tr>
+							<tr>
+								<td id="rA"></td>
 								<td><button id="nRB1"></button></td>
+							</tr>
+							<tr>
+								<td><button id="perfectBtn" class="gameBtn">Perfect NanoChip</button></td>
 							</tr>
 						</table>
 					</div>
@@ -132,24 +138,25 @@
 						</tr>
 					</table>
 				</div>
-				<table id="stats-container"></table>
 				<table id="settings-container">
 					<tr>
 						<td><button class="gameBtn settingBtn" id="hardReset">Hard Reset</button></td>
 					</tr>
+					<tr>
+						<td><label id="updateRateDisp" for="updateRateSlider">Update Rate</label></td>
+					</tr>
+					<tr>
+						<td><input type="range" min="35" max="150" value="50" name="Update Rate" id="updateRateSlider"></td>
+					</tr>
 				</table>
 			</div>
-
-			<!---<p id="speedNote">The game is sped up for testing purposes, expect the final game to be slower.</p>--->
 		</div>
-		<div id="testBox"></div>
+		<div id="winBox"><b>You Win!</b><br>Thanks for playing this short prototype!<br><button id="winBtn" class="gameBtn">Play Again?</button></div>
 		<script src="./scripts/decimal.min.js"></script>
 		<script src="./scripts/naniteClasses.js" charset="utf-8"></script>
 		<script src="./scripts/game.js" charset="utf-8"></script>
 		<script src="./scripts/pages.js" charset="utf-8"></script>
-		<script src="./scripts/mods.js" charset="utf-8"></script>
 		<script src="./scripts/settings.js" charset="utf-8"></script>
-		<script src="./scripts/testBox.js" charset="utf-8"></script>
 	</body>
 
 </html>

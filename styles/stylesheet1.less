@@ -147,7 +147,7 @@ td {
 }
 
 #nCs,
-#nanRs {
+#nRs {
 	width: 100%;
 }
 
@@ -159,12 +159,9 @@ td {
 	width: 100%;
 }
 
-#stats-container {
-	grid-area: bottom;
-}
-
 #settings-container {
 	grid-area: bottom;
+	width: 100%;
 }
 
 .tcolumn {
@@ -239,6 +236,7 @@ td {
 	height: 1.5em;
 	width: 10em;
 	font-size: 1.1em;
+	background-color: rgb(240,240,240);
 
 	&:hover {
 		background-color: rgb(75,100,225);
@@ -285,13 +283,13 @@ td {
 	pointer-events: none;
 }
 
-#testBox {
-	top: calc(75vh - 15em);
-	left: calc(50vw - 25em);
+#winBox {
 	position: absolute;
-	width: 50em;
-	height: 25em;
-	background-color: rgb(220,220,220);
-	color: black;
+	top: calc(50vh - 5em);
+	left: calc(50vw - 10em);
+	background-color: rgb(240,240,240);
 	border: 3px orange solid;
+	padding: 2em;
+	width: 20em;
+	text-align: center;
 }
