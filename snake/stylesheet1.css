@@ -1,0 +1,113 @@
+*, html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#page {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  background-color: rgb(60,60,60);
+  color: white;
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding: 5px;
+  text-align: center;
+}
+
+#counters {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	font-size: 1.2em;
+	z-index: 3;
+}
+
+#start,
+#lose {
+	position: absolute;
+	width: 250px;
+	height: 100px;
+	top: calc((100% / 2) - (100px / 2));
+	left: calc((100% / 2) - (250px / 2));
+	z-index: 3;
+	background-color: rgb(220,220,220);
+	color: black;
+	text-align: center;
+	display: none;
+	border-radius: 3px;
+	border: 3px grey solid;
+	padding: 0.5em 0;
+}
+
+#start p,
+#lose p {
+	font-weight: bold;
+	font-size: 1.3em;
+}
+
+#start button {
+	width: 10em;
+	height: 3em;
+}
+
+#lose button {
+	width: 10em;
+	height: 2em;
+}
+
+#directions {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 30vw;
+	height: 20vw;
+	z-index: 2;
+	display: grid;
+	grid-template-rows: 1fr 1fr;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-areas:
+		". up ."
+		"left down right";
+}
+
+.dirBtn {
+	opacity: 0.4;
+	background-color: transparent;
+	color: grey;
+	border: 3px grey solid;
+	border-radius: 5px;
+	width: 10vw;
+	height: 10vw;
+}
+
+#left {
+	grid-area: left;
+}
+
+#up {
+	grid-area: up;
+}
+
+#right {
+	grid-area: right;
+}
+
+#down {
+	grid-area: down;
+}
+
+#game {
+	position: relative;
+}
+
+#foreground,
+#background {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	background-color: rgb(40,40,40);
+}

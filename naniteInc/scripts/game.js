@@ -454,7 +454,6 @@ document.getElementById("tBM").addEventListener("click", () => buyMax("t"));
 for (let i = 0; i < game.nanC.length; i++) {
 	document.getElementById("n"+(i+1)+"B1").addEventListener("click", () => buyOne(i));
 	document.getElementById("n"+(i+1)+"BM").addEventListener("click", () => buyMax(i));
-	console.log("n"+(i+1)+" and an index of " + (i));
 }
 document.getElementById("maxBuy").addEventListener("click", () => buyMaxAll());
 document.getElementById("nsphereBtn").addEventListener("click", () => {buyOne("ns"); if (game.nsphere.created == false) game.nsphere.created = true;});
@@ -512,3 +511,69 @@ function resetHard() {
 
 window.addEventListener("load", loadGame);
 window.setInterval(saveGame, 2000);
+
+let nanBtn = document.getElementById("nanPage"),
+nanSBtn = document.getElementById("nanSPage"),
+settingsBtn = document.getElementById("settingsPage"),
+pageBtns = [nanBtn, nanSBtn, settingsBtn];
+
+let nanCont = document.getElementById("nan-container"),
+nanSCont = document.getElementById("nanS-container"),
+settingsCont = document.getElementById("settings-container"),
+pages = [nanCont, nanSCont, settingsCont];
+
+nanBtn.addEventListener("click", () => page(0));
+nanSBtn.addEventListener("click", () => page(1));
+settingsBtn.addEventListener("click", () => page(2));
+
+function page(index) {
+	for(let i = 0; i < pages.length; i++) {
+		if (i == index) {
+			pages[i].classList.remove("noDisplay");
+		} else {
+			pages[i].classList.add("noDisplay")
+		}
+	}
+}
+
+page(0);
+
+let nanCBtn = document.getElementById("nanCPage"),
+nanRBtn = document.getElementById("nanRPage"),
+nanDepBtns = [nanCBtn,nanRBtn];
+
+
+let nanCDep = document.getElementById("nCs"),
+nanRDep = document.getElementById("nRs"),
+nanDepartments = [nanCDep,nanRDep];
+
+nanCBtn.addEventListener("click", () => department(0));
+nanRBtn.addEventListener("click", () => department(1));
+
+function department(index) {
+	for (let i = 0; i < nanDepartments.length; i++) {
+		if (i == index) {
+			nanDepartments[i].classList.remove("noDisplay");
+		} else {
+			nanDepartments[i].classList.add("noDisplay")
+		}
+	}
+}
+
+department(0);
+
+let hardReset = document.getElementById("hardReset"),
+winReset = document.getElementById("winBtn");
+
+hardReset.addEventListener("click", resetHard);
+winReset.addEventListener("click", resetHard);
+
+let updateRateSlide = document.getElementById("updateRateSlider"),
+updateRateDisp = document.getElementById("updateRateDisp");
+
+updateRateSlide.addEventListener("change", () => {
+	updateRate = parseInt(updateRateSlide.value)
+	updateRateDisp.innerHTML = `Update Rate: ${updateRate}`;
+});
+
+updateRateDisp.innerHTML = `Update Rate: ${updateRate}`;

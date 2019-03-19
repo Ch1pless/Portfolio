@@ -1,5 +1,0 @@
-NanoResearcher: NanoPoints
-First Cost: 1e10 nanites
-Cost Mult: 1e10
-NanoSphere: nanites
-Create Cost: 1e2
